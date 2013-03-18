@@ -100,6 +100,11 @@ public class GameWerWirdMillionaer extends Game
         return this.mcqMissions.get(position);
     }
     
+    public void deleteMissionMultipleChoiceQuestion(MissionMultipleChoiceQuestion deletionReference)
+    {
+        mcqMissions.remove(deletionReference);
+    }
+    
     @Override
     public Trigger definedRuleset(String nextMissionID)
     {
@@ -133,6 +138,6 @@ public class GameWerWirdMillionaer extends Game
     public String assemble()
     {
         this.applyRuleset(combinedMissionsArrayList());
-        return "<game>" + utilitys.createStringFromArrayList(combinedMissionsArrayList()) + "</game>";
+        return "<game" + utilitys.name(this.name.get()) + ">" + utilitys.createStringFromArrayList(combinedMissionsArrayList()) + "</game>";
     } 
 }

@@ -27,7 +27,8 @@ public class GUIMissionStartAndExitScreen
     Label cancelLabel;
     TextField idTextField;
     TextField imageTextField;
-    TextField durationTextField;
+//    TextField durationTextField;
+    NumericTextField durationTextField;
     TextField cancelTextField;
     TitledPane saesTitledPane;
     MissionStartAndExitScreen saesReference;
@@ -39,11 +40,20 @@ public class GUIMissionStartAndExitScreen
         layout();
         bind();
     }
+        
+    public GUIMissionStartAndExitScreen(MissionStartAndExitScreen saesReference, String titledPaneLabel)
+    {
+        this.saesReference = saesReference;
+        instantiate();
+        saesTitledPane.setText(titledPaneLabel);
+        layout();
+        bind();
+    }
     
     private void instantiate()
     {
         cancelTextField = new TextField();
-        durationTextField = new TextField();
+        durationTextField = new NumericTextField();
         imageTextField = new TextField();
         idTextField = new TextField();
         cancelLabel = new Label("cancel");

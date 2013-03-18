@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
  *
  * @author Gregor
  */
-public class GUIAnswer {        // combines View and Controller
+public class GUIAnswer {
     HBox answerHBox;
     HBox correctHBox;
     HBox onChooseHBox;
