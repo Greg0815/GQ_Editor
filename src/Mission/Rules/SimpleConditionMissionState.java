@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission.Rules;
 
 /**
  *
@@ -13,12 +13,12 @@ public class SimpleConditionMissionState extends SimpleCondition
     private String id;
     private String state;
     
-    public SimpleConditionMissionState()
-    {
-        super();
-        this.id = "";
-        this.state = "";
-    }
+//    public SimpleConditionMissionState()
+//    {
+//        super();
+//        this.id = "";
+//        this.state = "";
+//    }
     
     public SimpleConditionMissionState(String id, String state)
     {
@@ -31,6 +31,12 @@ public class SimpleConditionMissionState extends SimpleCondition
     public String assemble()
     {
         return "<missionState" + utilitys.id(this.id) + utilitys.state(this.state) + " />";
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

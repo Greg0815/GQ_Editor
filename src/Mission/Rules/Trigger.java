@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission.Rules;
 
+import Main.AssembleInterface;
 import java.util.ArrayList;
 
 /**
@@ -15,15 +16,9 @@ public class Trigger implements AssembleInterface
     private String trigger;
     private ArrayList<Rule> rules;
 
-    public Trigger()
+    public Trigger(String trigger)
     {
-        this.trigger = "onStart";
-        this.rules = new ArrayList<>();
-    }
-    
-    public Trigger(String event)
-    {
-        this.trigger = event;
+        this.trigger = trigger;
         this.rules = new ArrayList<>();
     }
     
@@ -41,5 +36,11 @@ public class Trigger implements AssembleInterface
     public String assemble()
     {
         return "<" + trigger + ">" + utilitys.createStringFromArrayList(rules) + "</" + trigger + ">";
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

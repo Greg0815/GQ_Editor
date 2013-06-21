@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission.Rules;
 
 import java.util.ArrayList;
 
@@ -17,6 +17,11 @@ public abstract class ComplexCondition extends Condition
     public ComplexCondition()
     {
         conditions = new ArrayList<>();
+    }
+    
+    public ComplexCondition(Condition condition)
+    {
+        conditions.add(condition);
     }
     
     protected ArrayList<Condition> getConditionsArrayList()

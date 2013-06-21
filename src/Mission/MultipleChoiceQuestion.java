@@ -2,119 +2,106 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission;
 
+import static Main.AssembleInterface.utilitys;
+import Mission.Components.Answer;
+import java.util.ArrayList;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-
 
 /**
  *
  * @author Gregor
  */
-public class MissionMultipleChoiceQuestion extends Mission
+public class MultipleChoiceQuestion extends Mission
 {
-    private StringProperty loopUntilSuccess;
-    private StringProperty shuffle;
-    private MultipleChoiceQuestion question;
 
-    public MissionMultipleChoiceQuestion()
+    private BooleanProperty loopUntilSuccess;
+    private BooleanProperty shuffle;
+    private StringProperty questiontext;
+    private ArrayList<Answer> answer;
+
+    public MultipleChoiceQuestion()
     {
         super("MultipleChoiceQuestion");
-        this.loopUntilSuccess = new SimpleStringProperty();
-        this.shuffle = new SimpleStringProperty();
-        this.question = new MultipleChoiceQuestion();
+        loopUntilSuccess = new SimpleBooleanProperty();
+        shuffle = new SimpleBooleanProperty();
+        questiontext = new SimpleStringProperty();
+        answer = new ArrayList<>();
+        addNecessaryField("questiontext", "answer");
+        addCompletenessVariable(questiontext);
+        addCompletenessVariable(answer);
     }
-    
-    public MissionMultipleChoiceQuestion(String id, String loopUntilSuccess, String shuffle)
+
+    public BooleanProperty loopUntilSuccessProperty()
     {
-        super("MultipleChoiceQuestion", id);
-        this.loopUntilSuccess = new SimpleStringProperty();
+        return loopUntilSuccess;
+    }
+
+    public Boolean getLoopUntilSuccess()
+    {
+        return loopUntilSuccess.get();
+    }
+
+    public void setLoopUntilSuccess(Boolean loopUntilSuccess)
+    {
         this.loopUntilSuccess.set(loopUntilSuccess);
-        this.shuffle = new SimpleStringProperty();
+    }
+
+    public BooleanProperty shuffleProperty()
+    {
+        return shuffle;
+    }
+
+    public Boolean getShuffle()
+    {
+        return shuffle.get();
+    }
+
+    public void setShuffle(Boolean shuffle)
+    {
         this.shuffle.set(shuffle);
-        this.question = new MultipleChoiceQuestion();
     }
-    
-    public MissionMultipleChoiceQuestion(String id, String loopUntilSuccess, String shuffle, MultipleChoiceQuestion question)
+
+    public StringProperty questiontextProperty()
     {
-        super("MultipleChoiceQuestion", id);
-        this.loopUntilSuccess = new SimpleStringProperty();
-        this.loopUntilSuccess.set(loopUntilSuccess);
-        this.shuffle = new SimpleStringProperty();
-        this.shuffle.set(shuffle);
-        this.question = question;
+        return questiontext;
     }
-    
-    public StringProperty loopUntilSuccessProperty()
+
+    public String getQuestiontext()
     {
-        if(this.loopUntilSuccess == null)
-        {
-            this.loopUntilSuccess = new SimpleStringProperty();
-            this.loopUntilSuccess.addListener(new ChangeListener<String>()
-            {
-                @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                {
-                }
-            });
-        }
-        return this.loopUntilSuccess;
+        return questiontext.get();
     }
-    
-    public String getLoopUntilSuccess()
+
+    public void setQuestiontext(String questiontext)
     {
-        return this.loopUntilSuccess.get();
+        this.questiontext.set(questiontext);
     }
-    
-    public void setLoopUntilSuccess(String answer)
+
+    public Answer addAnswer()
     {
-        this.loopUntilSuccess.set(answer);
+        Answer newAnswer = new Answer();
+        answer.add(newAnswer);
+        return newAnswer;
     }
-    
-    public StringProperty shuffleProperty()
+
+    public void addAnswer(Answer answer)
     {
-        if(this.shuffle == null)
-        {
-            this.shuffle = new SimpleStringProperty();
-            this.shuffle.addListener(new ChangeListener<String>()
-            {
-                @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                {
-                }
-            });
-        }
-        return this.shuffle;
+        this.answer.add(answer);
     }
-    
-    public String getShuffle()
+
+    public String assembleQuestionAndAnswer()
     {
-        return this.shuffle.get();
-    }
-    
-    public void setShuffle(String answer)
-    {
-        this.shuffle.set(answer);
-    }
-    
-    
-    public void addMultipleChoiceQuestion(MultipleChoiceQuestion question)
-    {
-        this.question = question;
-    }
-    
-    public MultipleChoiceQuestion getMultipleChoiceQuestion()
-    {
-        return this.question;
+        return "<question><questiontext>" + this.questiontext.get() + "</questiontext>" + utilitys.createStringFromArrayList(this.answer) + "</question>";
     }
 
     @Override
     public String assemble()
     {
-        return createMissionHeader() + utilitys.createStringFromArrayList(triggers) + question.assemble() + createMissionTrailer();
+        return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + assembleQuestionAndAnswer() + createMissionTrailer();
     }
 
     @Override
@@ -122,5 +109,4 @@ public class MissionMultipleChoiceQuestion extends Mission
     {
         return utilitys.loopUntilSuccess(loopUntilSuccess.get()) + utilitys.shuffle(shuffle.get());
     }
-    
 }

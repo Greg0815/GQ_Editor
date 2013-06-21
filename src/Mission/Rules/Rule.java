@@ -2,9 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission.Rules;
 
+import Main.AssembleInterface;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -19,6 +21,12 @@ public class Rule implements AssembleInterface
     {
         this.conditions = new ArrayList<>();
         this.actions = new ArrayList<>();
+    }
+    
+    public Rule(Condition condition, Action... actions)
+    {
+        conditions.add(condition);
+        this.actions.addAll(Arrays.asList(actions));
     }
     
     public void addCondition(Condition condition)
@@ -40,10 +48,21 @@ public class Rule implements AssembleInterface
     {
         this.actions.add(position, action);
     }
+    
+    public ArrayList<Action> getActions()
+    {
+        return actions;
+    }
 
     @Override
     public String assemble()
     {
         return "<rule>" + utilitys.createStringFromArrayList(conditions) + utilitys.createStringFromArrayList(actions) + "</rule>";
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

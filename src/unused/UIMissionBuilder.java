@@ -2,161 +2,203 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package unused;
 
-import java.lang.reflect.Constructor;
+import Mission.Mission;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.util.converter.BooleanStringConverter;
+import javafx.util.converter.NumberStringConverter;
+import Main.NumericTextField;
+import Main.NumericTextField;
+import unused.UIInnerClassBuilder;
 
 /**
  *
  * @author Gregor
  */
-public class GUIBuilder {
-    
-    private Class buildGuiFromMe;
-    private Method[] privateMethods;
-    private Method[] publicMethods;
-    private Field[] privateFields;
-    private Field[] publicFields;
-    private Constructor<?>[] privateConstructors;
-    private Constructor<?>[] publicConstructors;
-    
-    public GUIBuilder()
-    {
-        buildGuiFromMe = null;
+public class UIMissionBuilder {
+
+    private Class mainClass;
+    private Class superClass;
+    private Mission missionReference;
+    private ArrayList<Method> mainClassProperties;
+    private ArrayList<Method> superClassProperties;
+    TitledPane returnTitledPane;
+    VBox returnTitledPaneContent;
+
+    public UIMissionBuilder(Mission missionReference) {
+        this.mainClass = missionReference.getClass();
+        this.missionReference = missionReference;
+        this.superClass = missionReference.getClass().getSuperclass();
+//        System.out.println("superclass ist == " + superClass.getName());
+        mainClassProperties = new ArrayList<>();
+        superClassProperties = new ArrayList<>();
+        extractProperties();
     }
-    
-    public GUIBuilder(Class someClass)
-    {
-        this.buildGuiFromMe = someClass;
-        extractMethodsFieldsAndConstructors();
-    }
-    
-    public Class getThisClass()
-    {
-        return this.buildGuiFromMe;
-    }
-    
-    public void changeClassTo(Class newClass)
-    {
-        this.buildGuiFromMe = newClass;
-        this.extractMethodsFieldsAndConstructors();
-    }
-    
-    public void printPrivateConstructors()
-    {
-        System.out.println("Private Konstruktoren:");
-        for(Constructor constructor : privateConstructors)
+
+    private void extractProperties() throws SecurityException {
+        for (Method method : mainClass.getDeclaredMethods())
         {
-            System.out.println(constructor.toString());
-            System.out.println(constructor.getGenericParameterTypes().length);
-            System.out.println(constructor.toGenericString());
+            if (method.getName().toLowerCase().contains("property")) {
+                mainClassProperties.add(method);
+            }
         }
-    }
-    
-    public Constructor getPrivateConstructor(int index)
-    {
-        return this.getPrivateConstructor(index);
-    }
-    
-    public void experiment()
-    {
-        System.out.println("generic parameter types - " + privateConstructors[3].getGenericParameterTypes());
-        System.out.println("modifiers - " + privateConstructors[3].getModifiers());
-        System.out.println("parameter types - " + privateConstructors[3].getParameterTypes());
-        System.out.println("type parameters - " + privateConstructors[3].getTypeParameters());
-    }
-    
-    public void printMethodsFieldsAndConstructors()
-    {
-//         privateMethods[0].getModifiers(); liefert public static final etc
-        System.out.println("Private Methoden:");
-        for(int i=0; i<privateMethods.length; i++)
+        for (Method method : superClass.getDeclaredMethods())
         {
-            System.out.println(privateMethods[i]);
-        }
-        System.out.println("Public Methoden:");
-        for(int i=0; i<publicMethods.length; i++)
-        {
-            System.out.println(publicMethods[i]);
-        }
-        System.out.println("Private Felder:");
-        for(int i=0; i<privateFields.length; i++)
-        {
-            System.out.println(privateFields[i]);
-        }
-        System.out.println("Public Felder:");
-        for(int i=0; i<publicFields.length; i++)
-        {
-            System.out.println(publicFields[i]);
-        }
-        System.out.println("Private Konstruktoren:");
-        for(int i=0; i<privateConstructors.length; i++)
-        {
-            System.out.println(privateConstructors[i]);
-        }
-        System.out.println("Public Konstruktoren:");
-        for(int i=0; i<publicConstructors.length; i++)
-        {
-            System.out.println(publicConstructors[i]);
+            if (method.getName().toLowerCase().contains("property")) {
+                superClassProperties.add(method);
+            }
         }
     }
 
-    private void extractMethodsFieldsAndConstructors() throws SecurityException {
-        this.privateMethods = this.buildGuiFromMe.getDeclaredMethods();       // wahrscheinlich nur zum aktuellen objekt gehörend ohne superklassen
-        this.publicMethods = this.buildGuiFromMe.getMethods();                // alle methode (auch geerbte)
-        this.privateFields = this.buildGuiFromMe.getDeclaredFields();         // alle variablen der klasse (member)
-        this.publicFields = this.buildGuiFromMe.getFields();                  // weiß nicht so genau, nur das geerbte utilitys ding ?!? 
-        this.privateConstructors = this.buildGuiFromMe.getDeclaredConstructors();     // für die klasse Answer gleiche ausgabe wie getConstructors(), von daher ist der unterschied noch nicht ersichtlich
-        this.publicConstructors = this.buildGuiFromMe.getConstructors();
-    }
-    
-    public GridPane makeForm()
+    public TitledPane makeMissionForm() // muss irgendwas zurückgeben
     {
-        GridPane gridpane = new GridPane();
-        gridpane.setPadding(new Insets(5));
-        gridpane.setHgap(5);
-        gridpane.setVgap(5);
-        
-        ArrayList<Label> labels = new ArrayList<>();
-        for(int i=0; i<privateFields.length; i++)
-        {
-            labels.add(new Label(privateFields[i].getName()));
+        returnTitledPane = new TitledPane();
+        returnTitledPaneContent = new VBox();
+
+        for (Method property : superClassProperties) {
+            if (property.getName().toLowerCase().contains("id"))
+            {
+                Label boundToId = new Label();
+                try {
+                    boundToId.textProperty().bindBidirectional((StringProperty) property.invoke(missionReference));
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    Logger.getLogger(UIMissionBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                boundToId.setText(missionReference.getType());
+                returnTitledPane.setGraphic(boundToId);
+            }
+            String propertyType = property.getReturnType().toString().substring(28);
+            makeHBoxDependingOnPropertyType(propertyType, property, returnTitledPaneContent);
         }
-        final ArrayList<TextField> textFields = new ArrayList<>();
-        for(int i=0; i<labels.size(); i++)
-        {
-            textFields.add(new TextField());
+
+        for (Method property : mainClassProperties) {
+            String propertyType = property.getReturnType().toString().substring(28);
+            makeHBoxDependingOnPropertyType(propertyType, property, returnTitledPaneContent);
         }
-        Button saveButton = new Button("Save");
-        StringProperty answerText = new SimpleStringProperty();
-//        saveButton.setOnAction(new EventHandler<ActionEvent>());
-        
-        for(int i=0; i<labels.size(); i++)
-        {
-            GridPane.setHalignment(labels.get(i), HPos.RIGHT);
-            gridpane.add(labels.get(i), 0, i);
-            GridPane.setHalignment(textFields.get(i), HPos.LEFT);
-            gridpane.add(textFields.get(i), 1, i);
-        }
-        GridPane.setHalignment(saveButton, HPos.RIGHT);
-        gridpane.add(saveButton, 1, labels.size());
-        return gridpane;
+
+        returnTitledPane.setContent(returnTitledPaneContent);
+        processRemainingFields();
+        return returnTitledPane;
     }
-    
+
+    private void processRemainingFields()
+    {
+        for(Field field : missionReference.getClass().getDeclaredFields())
+        {
+            if(!field.getType().getName().toLowerCase().contains("property"))
+            {
+//                System.out.println("field name == " + field.getName());
+                try
+                {
+                    field.setAccessible(true);
+                    UIInnerClassBuilder innerClass = new UIInnerClassBuilder(field.get(missionReference));    // statt field irgendwas wie missionReference.getObject(field.getName())
+                    returnTitledPaneContent.getChildren().add(innerClass.makeForm());
+                } catch (IllegalArgumentException | IllegalAccessException ex)
+                {
+                    Logger.getLogger(UIMissionBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public HBox makeTextualHBox(String label, StringProperty stringProperty) // später private machen
+    {
+        TextField bindToPropertyTextField = new TextField();
+        bindToPropertyTextField.textProperty().bindBidirectional(stringProperty);
+        HBox returnHBox = new HBox();
+        returnHBox.getChildren().addAll(new Label(label), bindToPropertyTextField);
+        return returnHBox;
+    }
+
+    public HBox makeBooleanChoiceBox(String label, BooleanProperty booleanProperty) // später private machen
+    {
+        ChoiceBox bindToPropertyChoiceBox = new ChoiceBox();
+        bindToPropertyChoiceBox.getItems().addAll("true", "false");
+        bindToPropertyChoiceBox.getSelectionModel().selectFirst();
+        BooleanStringConverter booleanStringConverter = new BooleanStringConverter();
+        Bindings.bindBidirectional(bindToPropertyChoiceBox.valueProperty(), booleanProperty, booleanStringConverter);
+        HBox returnHBox = new HBox();
+        returnHBox.getChildren().addAll(new Label(label), bindToPropertyChoiceBox);
+        return returnHBox;
+    }
+
+    public HBox makeNumbericHBox(String label, IntegerProperty integerProperty) // später private machen
+    {
+        NumericTextField bindToPropertyNumericTextField = new NumericTextField();
+        NumberStringConverter numberStringConverter = new NumberStringConverter();
+        bindToPropertyNumericTextField.textProperty().bindBidirectional(integerProperty, numberStringConverter);
+        HBox returnHBox = new HBox();
+        returnHBox.getChildren().addAll(new Label(label), bindToPropertyNumericTextField);
+        return returnHBox;
+    }
+
+    public void printMethods()
+    {
+        System.out.println("main class Methoden:");
+        for (int i = 0; i < mainClass.getDeclaredMethods().length; i++) {
+            System.out.println(mainClass.getDeclaredMethods()[i].toString());
+        }
+        System.out.println("super class Methoden:");
+        for (int i = 0; i < superClass.getDeclaredMethods().length; i++) {
+            System.out.println(superClass.getDeclaredMethods()[i].toString());
+        }
+    }
+
+    public void printProperty() {
+        for (Method method : mainClassProperties) {
+            System.out.println("\n" + method.getName());
+        }
+        for (Method method : superClassProperties) {
+            System.out.println("\n" + method.getName());
+        }
+    }
+
+    private void makeHBoxDependingOnPropertyType(String propertyType, Method property, VBox returnValueContent)
+    {
+        if (propertyType.equalsIgnoreCase("StringProperty"))
+        {
+            try
+            {
+                StringProperty invokedProperty = (StringProperty) property.invoke(missionReference);
+                returnValueContent.getChildren().add(makeTextualHBox(property.getName().replace("Property", ""), invokedProperty));
+            } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+                System.out.println(e);
+            }
+
+        } else if (propertyType.equalsIgnoreCase("IntegerProperty"))
+        {
+            try
+            {
+                IntegerProperty invokedProperty = (IntegerProperty) property.invoke(missionReference);
+                returnValueContent.getChildren().add(makeNumbericHBox(property.getName().replace("Property", ""), invokedProperty));
+            } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+                System.out.println(e);
+            }
+        } else if (propertyType.equalsIgnoreCase("BooleanProperty"))
+        {
+            try
+            {
+                BooleanProperty invokedProperty = (BooleanProperty) property.invoke(missionReference);
+                returnValueContent.getChildren().add(makeBooleanChoiceBox(property.getName().replace("Property", ""), invokedProperty));
+            } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+                System.out.println(e);
+            }
+        }
+    }
 }

@@ -2,109 +2,88 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 /**
  *
  * @author Gregor
  */
-public class MissionStartAndExitScreen extends Mission
+public class StartAndExitScreen extends Mission
 {
     private StringProperty image;
-    private StringProperty duration;
+    private IntegerProperty duration;
     private StringProperty cancel;
     
-    public MissionStartAndExitScreen()
+    public StartAndExitScreen()
     {
         super("StartAndExitScreen");
-        this.image = new SimpleStringProperty();
-        this.duration = new SimpleStringProperty();
-        this.duration.set("5000");
-        this.cancel = new SimpleStringProperty();
-        this.cancel.set("true");
+        image = new SimpleStringProperty();
+        duration = new SimpleIntegerProperty();
+        cancel = new SimpleStringProperty();
+        addNecessaryField("image");
+        this.addCompletenessVariable(image);
     }
     
     public StringProperty imageProperty()
     {
-        if(this.image == null)
-        {
-            this.image = new SimpleStringProperty();
-            this.image.addListener(new ChangeListener<String>()
-            {
-                @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                {
-                }
-            });
-        }
-        return this.image;
+//        if(this.image == null)
+//        {
+//            this.image = new SimpleStringProperty();
+//        }
+        return image;
     }
     
     public String getImage()
     {
-        return this.image.get();
+        return image.get();
     }
     
-    public void setImage(String answer)
+    public void setImage(String image)
     {
-        this.image.set(answer);
+        this.image.set(image);
     }
     
-    public StringProperty durationProperty()
+    public IntegerProperty durationProperty()
     {
-        if(this.duration == null)
-        {
-            this.duration = new SimpleStringProperty();
-            this.duration.addListener(new ChangeListener<String>()
-            {
-                @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                {
-                }
-            });
-        }
-        return this.duration;
+//        if(this.duration == null)
+//        {
+//            this.duration = new SimpleIntegerProperty();
+//        }
+        return duration;
     }
     
-    public String getDuration()
+    public Integer getDuration()
     {
-        return this.duration.get();
+        return duration.get();
     }
     
-    public void setDuration(String answer)
+    public void setDuration(Integer duration)
     {
-        this.duration.set(answer);
+        this.duration.set(duration);
     }
     
     public StringProperty cancelProperty()
     {
-        if(this.cancel == null)
-        {
-            this.cancel = new SimpleStringProperty();
-            this.cancel.addListener(new ChangeListener<String>()
-            {
-                @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                {
-                }
-            });
-        }
-        return this.cancel;
+//        if(this.cancel == null)
+//        {
+//            this.cancel = new SimpleStringProperty();
+//        }
+        return cancel;
     }
     
     public String getCancel()
     {
-        return this.cancel.get();
+        return cancel.get();
     }
     
-    public void setCancel(String answer)
+    public void setCancel(String cancel)
     {
-        this.cancel.set(answer);
+        this.cancel.set(cancel);
     }
 
     @Override
@@ -116,7 +95,7 @@ public class MissionStartAndExitScreen extends Mission
     @Override
     public String assemble()
     {
-        return createMissionHeader() + utilitys.createStringFromArrayList(triggers) + createMissionTrailer();
+        return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + createMissionTrailer();
     }
     
 }

@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Main;
 
-import Missions.MissionMultipleChoiceQuestion;
+import Mission.Mission;
 import javafx.event.*;
 import javafx.scene.control.TitledPane;
 
@@ -17,22 +17,22 @@ public class DeleteMissionEvent extends Event
     public static final EventType<DeleteMissionEvent> TITLED_PANE_DELETION = new EventType(ANY, "TITLED_PANE_DELETION");
     
     private TitledPane toBeDeletedTitledPane;
-    private MissionMultipleChoiceQuestion toBeDeletedMission;
+    private Mission toBeDeletedMission;
     
-    public DeleteMissionEvent(TitledPane toBeDeleted, MissionMultipleChoiceQuestion toBeDeletedMission)
+    public DeleteMissionEvent(TitledPane toBeDeleted, Mission toBeDeletedMission)
     {
         super(TITLED_PANE_DELETION);
         this.toBeDeletedTitledPane = toBeDeleted;
         this.toBeDeletedMission = toBeDeletedMission;
     }
-    public DeleteMissionEvent(EventType<? extends Event> eventType, TitledPane toBeDeleted, MissionMultipleChoiceQuestion toBeDeletedMission)
+    public DeleteMissionEvent(EventType<? extends Event> eventType, TitledPane toBeDeleted, Mission toBeDeletedMission)
     {
         super(eventType);
         this.toBeDeletedTitledPane = toBeDeleted;
         this.toBeDeletedMission = toBeDeletedMission;
     }
     
-    public DeleteMissionEvent(Object eventSource, EventTarget eventTarget, EventType<? extends Event> eventType, TitledPane toBeDeleted, MissionMultipleChoiceQuestion toBeDeletedMission)
+    public DeleteMissionEvent(Object eventSource, EventTarget eventTarget, EventType<? extends Event> eventType, TitledPane toBeDeleted, Mission toBeDeletedMission)
     {
         super(eventSource, eventTarget, eventType);
         this.toBeDeletedTitledPane = toBeDeleted;
@@ -44,7 +44,7 @@ public class DeleteMissionEvent extends Event
         return this.toBeDeletedTitledPane;
     }
     
-    public MissionMultipleChoiceQuestion getToBeDeletedMission()
+    public Mission getToBeDeletedMission()
     {
         return this.toBeDeletedMission;
     }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission.Rules;
 
 /**
  *
@@ -14,7 +14,7 @@ public class ActionDecrementVariable extends Action
     
     public ActionDecrementVariable()
     {
-        super();
+        super("DecrementVariable");
         this.var = "";
     }
     
@@ -24,10 +24,26 @@ public class ActionDecrementVariable extends Action
         this.var = var;
     }
     
+    public void setType(String var)
+    {
+        this.var = var;
+    }
+    
     @Override
     public String assemble()
     {
         return "<action" + utilitys.type(this.getType()) + utilitys.var(this.var) + "/>";
     }
-    
+
+    @Override
+    public void setParameters(String... parametersList)
+    {
+        this.var = parametersList[0];
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

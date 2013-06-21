@@ -2,20 +2,22 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission.Rules;
+
+import Main.AssembleInterface;
 
 /**
  *
  * @author Gregor
  */
-abstract public class Action implements AssembleInterface
+public abstract class Action implements AssembleInterface
 {
     private String type;
     
-    public Action()
-    {
-        this.type = "";
-    }
+//    public Action()
+//    {
+//        this.type = "";
+//    }
     
     public Action(String type)
     {
@@ -26,4 +28,8 @@ abstract public class Action implements AssembleInterface
     {
         return this.type;
     }
+    
+//    abstract public void setType(String var);
+    
+    abstract public void setParameters(String... parametersList);
 }

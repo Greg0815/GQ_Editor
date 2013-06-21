@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Main;
 
 import javafx.scene.control.TextField;
 
@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
  *
  * @author Gregor
  */
-public class TextualTextField extends TextField
+public class RestrictedInputTextField extends TextField
 {
     @Override
     public void replaceText(int start, int end, String text)

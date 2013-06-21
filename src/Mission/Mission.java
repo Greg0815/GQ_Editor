@@ -2,99 +2,104 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Mission;
 
+import Main.AssembleInterface;
+import Main.GameElement;
 import java.util.ArrayList;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import java.util.Arrays;
 
 /**
  *
  * @author Gregor
  */
-abstract public class Mission implements AssembleInterface
+abstract public class Mission extends GameElement implements AssembleInterface
 {
+
     private String type;
-    private StringProperty id;
-    protected ArrayList<Trigger> triggers;
-    
+    private ArrayList<String> necessaryFields;
+
     public Mission()
     {
+        super();
         this.type = "";
-        this.id = new SimpleStringProperty();
-        triggers = new ArrayList<>();
-    }
-    
-    public Mission(String type)
-    {
-        this.type = type;
-        this.id = new SimpleStringProperty();
-        triggers = new ArrayList<>();
-    }
-    
-    public Mission(String type, String id)      // überflüssig?
-    {
-        this.type = type;
-        this.id = new SimpleStringProperty();
-        this.id.set(id);
-        triggers = new ArrayList<>();
-    }
-    
-    public Mission(String type, String id, ArrayList<Trigger> triggers)     // überflüssig?
-    {
-        this.type = type;
-        this.id = new SimpleStringProperty();
-        this.id.set(id);
-        this.triggers = triggers;
+        this.necessaryFields = new ArrayList<>();
+        this.necessaryFields.add("id");
+        this.addCompletenessVariable(this.idProperty());
     }
 
-    public StringProperty idProperty()
+    public Mission(String type)
     {
-        if(this.id == null)
-        {
-            this.id = new SimpleStringProperty();
-            this.id.addListener(new ChangeListener<String>()
-            {
-                @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                {
-                }
-            });
-        }
-        return this.id;
+        super();
+        this.type = type;
+        this.necessaryFields = new ArrayList<>();
+        this.necessaryFields.add("id");
+        this.addCompletenessVariable(this.idProperty());
     }
-    
-    public String getId()
+
+    @Override
+    public Boolean isComplete()         // TODO: rework
     {
-        return this.id.get();
+        Boolean isComplete = true;
+//        for (Object object : this.getCompletenessArrayList()) {
+////            System.out.println(object.getClass());
+////            if (object instanceof ArrayList) {            // TODO
+////                for (Object obj : ((ArrayList) object).toArray()) {
+////                    if (obj instanceof AssembleInterface) {
+////                        if (((AssembleInterface) obj).isComplete()) {
+////                            isComplete = false;
+////                        }
+////                        else if (obj instanceof Property) {
+////                            if (((Property) obj).getValue() == null) {
+////                                isComplete = false;
+////                            }
+////                        }
+////                    }
+////                }
+////            }
+//            if (object instanceof AssembleInterface) {
+//                if (((AssembleInterface) object).isComplete()) {
+//                    isComplete = false;
+//                }
+//            }
+//            else if (object instanceof Property) {
+//                if (((Property) object).getValue() == null) {
+//                    isComplete = false;
+//                }
+//            }
+//        }
+        return isComplete;
     }
-    
-    public void setId(String id)
+
+    public ArrayList<String> getNecessaryFields()
     {
-        this.id.set(id);
+        return necessaryFields;
     }
-    
-    public void addTrigger(Trigger newTrigger)
+
+    public void addNecessaryField(String fieldName)
     {
-        this.triggers.add(newTrigger);
+        this.necessaryFields.add(fieldName);
     }
-    
-    public void addTriggerAtPosition(Trigger newTrigger, int position)
+
+    public void addNecessaryField(String... fields)
     {
-        this.triggers.add(position, newTrigger);
+        this.necessaryFields.addAll(Arrays.asList(fields));
     }
-    
+
+    public String getType()
+    {
+        return this.type;
+    }
+
     public String createMissionHeader()
     {
-        return "<mission" + utilitys.type(this.type) + utilitys.id(this.id.get()) + createSpecificMissionHeader() + ">";
+        return "<mission" + utilitys.type(this.type) + utilitys.id(this.getId()) + createSpecificMissionHeader() + ">";
     }
-    
+
     public String createMissionTrailer()
     {
         return "</mission>";
     }
-    
+
     public abstract String createSpecificMissionHeader();
 }

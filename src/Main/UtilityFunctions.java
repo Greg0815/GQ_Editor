@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package Main;
 
 import java.util.ArrayList;
 
@@ -33,6 +33,16 @@ public class UtilityFunctions<T extends AssembleInterface>
     }
     
     public String typeAndValue(String type, Boolean value)
+    {
+        return " " + type + "=\"" + value.toString() + "\"";
+    }
+    
+    public String typeAndValue(String type, Float value)
+    {
+        return " " + type + "=\"" + value.toString() + "\"";
+    }
+    
+    public String typeAndValue(String type, Integer value)
     {
         return " " + type + "=\"" + value.toString() + "\"";
     }
@@ -115,5 +125,165 @@ public class UtilityFunctions<T extends AssembleInterface>
     public String name(String name)
     {
         return typeAndValue("name", name);
+    }
+    
+    public String speaker(String speaker)
+    {
+        return typeAndValue("speaker", speaker);
+    }
+    
+    public String sound(String sound)
+    {
+        return typeAndValue("sound", sound);
+    }
+    
+    public String blocking(Boolean blocking)
+    {
+        return typeAndValue("blocking", blocking);
+    }
+    
+    public String nextdialogbuttontext(String nextdialogbuttontext)
+    {
+        return typeAndValue("nextdialogbuttontext", nextdialogbuttontext);
+    }
+    
+    public String textsize(String textsize)
+    {
+        return typeAndValue("textsize", textsize);
+    }
+    
+    public String endbuttontext(String endbuttontext)
+    {
+        return typeAndValue("endbuttontext", endbuttontext);
+    }
+    
+    public String longitude(Float longitude)
+    {
+        return typeAndValue("longitude", longitude);
+    }
+    
+    public String latitude(Float latitude)
+    {
+        return typeAndValue("latitude", latitude);
+    }
+    
+    public String img(String img)
+    {
+        return typeAndValue("img", img);
+    }
+    
+    public String initialVisibility(Boolean initialVisibility)
+    {
+        return typeAndValue("initialVisibility", initialVisibility);
+    }
+    
+    public String radius(Integer radius)
+    {
+        return typeAndValue("radius", radius);
+    }
+    
+    public String mapkind(String mapkind)
+    {
+        return typeAndValue("mapkind", mapkind);
+    }
+    
+    public String zoomlevel(Integer zoomlevel)
+    {
+        return typeAndValue("zoomlevel", zoomlevel);
+    }
+    
+    public String task(String task)
+    {
+        return typeAndValue("task", task);
+    }
+    
+    public String file(String file)
+    {
+        return typeAndValue("file", file);
+    }
+    
+    public String initial_image(String initial_image)
+    {
+        return typeAndValue("initial_image", initial_image);
+    }
+    
+    public String if_right_image(String if_right_image)
+    {
+        return typeAndValue("if_right_image", if_right_image);
+    }
+    
+    public String if_wrong_image(String if_wrong_image)
+    {
+        return typeAndValue("if_wrong_image", if_wrong_image);
+    }
+    
+    public String mode(Boolean mode)
+    {
+        return typeAndValue("mode", mode);
+    }
+    
+    public String taskdescription(String taskdescription)
+    {
+        return typeAndValue("taskdescription", taskdescription);
+    }
+    
+    public String buttontext(String buttontext)
+    {
+        return typeAndValue("buttontext", buttontext);
+    }
+    
+    public String question(String question)
+    {
+        return typeAndValue("question", question);
+    }
+    
+    public String prompt(String prompt)
+    {
+        return typeAndValue("prompt", prompt);
+    }
+    
+    public String replyOnCorrect(String replyOnCorrect)
+    {
+        return typeAndValue("replyOnCorrect", replyOnCorrect);
+    }
+    
+    public String replyOnWrong(String replyOnWrong)
+    {
+        return typeAndValue("replyOnWrong", replyOnWrong);
+    }
+    
+    public String url(String url)
+    {
+        return typeAndValue("url", url);
+    }
+    
+    public String controllable(Boolean controllable)
+    {
+        return typeAndValue("controllable", controllable);
+    }
+    
+    public String exitDialogTitle(String exitDialogTitle)
+    {
+        return typeAndValue("exitDialogTitle", exitDialogTitle);
+    }
+    
+    public String exitDialogMessage(String exitDialogMessage)
+    {
+        return typeAndValue("exitDialogMessage", exitDialogMessage);
+    }
+    
+    public String exitDialogKeepWatchingText(String exitDialogKeepWatchingText)
+    {
+        return typeAndValue("exitDialogKeepWatchingText", exitDialogKeepWatchingText);
+    }
+    
+    public String exitDialogWatchAgainText(String exitDialogWatchAgainText)
+    {
+        return typeAndValue("exitDialogWatchAgainText", exitDialogWatchAgainText);
+    }
+    
+    public String exitDialogLeaveText(String exitDialogLeaveText)
+    {
+        return typeAndValue("exitDialogLeaveText", exitDialogLeaveText);
     }
 }

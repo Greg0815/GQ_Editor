@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package unused;
 
+import Mission.MultipleChoiceQuestion;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,6 +15,7 @@ import javafx.scene.image.ImageViewBuilder;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import Main.DeleteMissionEvent;
 
 /**
  *
@@ -32,9 +34,9 @@ public class GUIMissionMultipleChoiceQuestion {
     TextField shuffleTextField;
     TitledPane mmcqTitledPane;
     ImageView deleteIcon;
-    MissionMultipleChoiceQuestion mmcqReference;
+    MultipleChoiceQuestion mmcqReference;
 
-    public GUIMissionMultipleChoiceQuestion(MissionMultipleChoiceQuestion mmcqReference)
+    public GUIMissionMultipleChoiceQuestion(MultipleChoiceQuestion mmcqReference)
     {
         this.mmcqReference = mmcqReference;
         instantiate();
@@ -42,7 +44,7 @@ public class GUIMissionMultipleChoiceQuestion {
         bind();
     }
 
-    public GUIMissionMultipleChoiceQuestion(MissionMultipleChoiceQuestion mmcqReference, String titledPaneLabel)
+    public GUIMissionMultipleChoiceQuestion(MultipleChoiceQuestion mmcqReference, String titledPaneLabel)
     {
         this.mmcqReference = mmcqReference;
         instantiate();
@@ -51,7 +53,7 @@ public class GUIMissionMultipleChoiceQuestion {
         bind();
     }
  
-    public GUIMissionMultipleChoiceQuestion(MissionMultipleChoiceQuestion mmcqReference, int missionCount)
+    public GUIMissionMultipleChoiceQuestion(MultipleChoiceQuestion mmcqReference, int missionCount)
     {
         this.mmcqReference = mmcqReference;
         instantiate();
@@ -98,7 +100,7 @@ public class GUIMissionMultipleChoiceQuestion {
         idHBox.getChildren().addAll(idLabel, idTextField);
         shuffleHBox.getChildren().addAll(shuffleLabel, shuffleTextField);
         loopUntilSuccessHBox.getChildren().addAll(loopUntilSuccessLabel, loopUntilSuccessTextField);
-        layoutVBox.getChildren().addAll(idHBox, shuffleHBox, loopUntilSuccessHBox, new GUIMultipleChoiceQuestion(mmcqReference.getMultipleChoiceQuestion()).getLayout());
+//        layoutVBox.getChildren().addAll(idHBox, shuffleHBox, loopUntilSuccessHBox, new GUIMultipleChoiceQuestion(mmcqReference.getMultipleChoiceQuestion()).getLayout());
     }
     
     private void bind()
@@ -107,8 +109,8 @@ public class GUIMissionMultipleChoiceQuestion {
         
         idTextField.textProperty().bindBidirectional(mmcqTitledPane.textProperty());    // new
         
-        mmcqReference.loopUntilSuccessProperty().bindBidirectional(loopUntilSuccessTextField.textProperty());
-        mmcqReference.shuffleProperty().bindBidirectional(shuffleTextField.textProperty());
+//        mmcqReference.loopUntilSuccessProperty().bindBidirectional(loopUntilSuccessTextField.textProperty());
+//        mmcqReference.shuffleProperty().bindBidirectional(shuffleTextField.textProperty());
     }
 
     public TitledPane getLayout()
@@ -116,7 +118,7 @@ public class GUIMissionMultipleChoiceQuestion {
         return this.mmcqTitledPane;
     }
     
-    public MissionMultipleChoiceQuestion getReference()
+    public MultipleChoiceQuestion getReference()
     {
         return this.mmcqReference;
     }

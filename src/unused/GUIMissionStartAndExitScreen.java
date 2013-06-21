@@ -2,13 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package unused;
 
+import Mission.StartAndExitScreen;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import Main.NumericTextField;
 
 /**
  *
@@ -31,9 +33,9 @@ public class GUIMissionStartAndExitScreen
     NumericTextField durationTextField;
     TextField cancelTextField;
     TitledPane saesTitledPane;
-    MissionStartAndExitScreen saesReference;
+    StartAndExitScreen saesReference;
     
-    public GUIMissionStartAndExitScreen(MissionStartAndExitScreen saesReference)
+    public GUIMissionStartAndExitScreen(StartAndExitScreen saesReference)
     {
         this.saesReference = saesReference;
         instantiate();
@@ -41,7 +43,7 @@ public class GUIMissionStartAndExitScreen
         bind();
     }
         
-    public GUIMissionStartAndExitScreen(MissionStartAndExitScreen saesReference, String titledPaneLabel)
+    public GUIMissionStartAndExitScreen(StartAndExitScreen saesReference, String titledPaneLabel)
     {
         this.saesReference = saesReference;
         instantiate();
@@ -81,7 +83,7 @@ public class GUIMissionStartAndExitScreen
     {
         saesReference.idProperty().bindBidirectional(idTextField.textProperty());
         saesReference.imageProperty().bindBidirectional(imageTextField.textProperty());
-        saesReference.durationProperty().bindBidirectional(durationTextField.textProperty());
+//        saesReference.durationProperty().bindBidirectional(durationTextField.textProperty());
         saesReference.cancelProperty().bindBidirectional(cancelTextField.textProperty());
     }
     

@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxtestapplication1;
+package unused;
 
+import Mission.Components.Answer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Accordion;
@@ -26,15 +27,15 @@ public class GUIMultipleChoiceQuestion
     TextField questiontextTextField;
     Button addAnswer;
     Accordion multipleChoiceQuestionAccordion;      // Nutzen von dem Überdenken, rückgabe von VBOX reicht vermutlich
-    MultipleChoiceQuestion multipleChoiceQuestionReference;
+//    MultiChoiceQuestion multipleChoiceQuestionReference;
     
-    public GUIMultipleChoiceQuestion(MultipleChoiceQuestion multipleChoiceQuestionReference)
-    {
-        this.multipleChoiceQuestionReference = multipleChoiceQuestionReference;
-        instantiate();
-        layout();
-        bind();
-    }
+//    public GUIMultipleChoiceQuestion(MultiChoiceQuestion multipleChoiceQuestionReference)
+//    {
+//        this.multipleChoiceQuestionReference = multipleChoiceQuestionReference;
+//        instantiate();
+//        layout();
+//        bind();
+//    }
 
     private void instantiate()
     {
@@ -60,12 +61,12 @@ public class GUIMultipleChoiceQuestion
             public void handle(ActionEvent event)
             {
                 Answer newAnswer = new Answer();
-                multipleChoiceQuestionReference.addAnswer(newAnswer);
-                GUIAnswer newGUIAnswerForMultipleChoiceQuestion = new GUIAnswer(newAnswer, "Antwort " + Integer.toString(multipleChoiceQuestionReference.getAnswerCount()));
-                layoutVBox.getChildren().addAll(newGUIAnswerForMultipleChoiceQuestion.getLayout());
+//                multipleChoiceQuestionReference.addAnswer(newAnswer);
+//                GUIAnswer newGUIAnswerForMultipleChoiceQuestion = new GUIAnswer(newAnswer, "Antwort " + Integer.toString(multipleChoiceQuestionReference.getAnswerCount()));
+//                layoutVBox.getChildren().addAll(newGUIAnswerForMultipleChoiceQuestion.getLayout());
             }
         });
-        multipleChoiceQuestionReference.questiontextProperty().bindBidirectional(questiontextTextField.textProperty());
+//        multipleChoiceQuestionReference.questiontextProperty().bindBidirectional(questiontextTextField.textProperty());
     }
 
     public Accordion getLayout()

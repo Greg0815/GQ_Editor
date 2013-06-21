@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Missions;
+package Mission;
 
+import Mission.Components.Dialogitem;
 import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -12,120 +13,85 @@ import javafx.beans.property.StringProperty;
  *
  * @author Gregor
  */
-public class MissionNPCTalk extends Mission
+public class NPCTalk extends Mission
 {
+
     private StringProperty image;
     private StringProperty nextdialogbuttontext;
     private StringProperty endbuttontext;
     private StringProperty textsize;
     private StringProperty cancel;
     private ArrayList<Dialogitem> dialogitem;
-    
-    public MissionNPCTalk()
+
+    public NPCTalk()
     {
+        super("NPCTalk");
         image = new SimpleStringProperty();
         nextdialogbuttontext = new SimpleStringProperty();
         endbuttontext = new SimpleStringProperty();
         textsize = new SimpleStringProperty();
         cancel = new SimpleStringProperty();
         dialogitem = new ArrayList<>();
+        this.addNecessaryField("dialogitem");
+        this.addCompletenessVariable(dialogitem);
     }
-    
+
     public StringProperty imageProperty()
     {
-        if(this.image == null)
-        {
-            this.image = new SimpleStringProperty();
-//            this.duration.addListener(new ChangeListener<String>()
-//            {
-//                @Override
-//                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-//                {
-//                }
-//            });
-        }
-        return this.image;
+        return image;
     }
-    
+
     public StringProperty nextdialogbuttontextProperty()
     {
-        if(this.nextdialogbuttontext == null)
-        {
-            this.nextdialogbuttontext = new SimpleStringProperty();
-//            this.duration.addListener(new ChangeListener<String>()
-//            {
-//                @Override
-//                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-//                {
-//                }
-//            });
-        }
-        return this.nextdialogbuttontext;
+        return nextdialogbuttontext;
     }
-    
+
     public StringProperty endbuttontextProperty()
     {
-        if(this.endbuttontext == null)
-        {
-            this.endbuttontext = new SimpleStringProperty();
-//            this.duration.addListener(new ChangeListener<String>()
-//            {
-//                @Override
-//                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-//                {
-//                }
-//            });
-        }
-        return this.endbuttontext;
+        return endbuttontext;
     }
-    
+
     public StringProperty textsizeProperty()
     {
-        if(this.textsize == null)
-        {
-            this.textsize = new SimpleStringProperty();
-//            this.duration.addListener(new ChangeListener<String>()
-//            {
-//                @Override
-//                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-//                {
-//                }
-//            });
-        }
-        return this.textsize;
+        return textsize;
     }
-    
+
     public StringProperty cancelProperty()
     {
-        if(this.cancel == null)
-        {
-            this.cancel = new SimpleStringProperty();
-//            this.duration.addListener(new ChangeListener<String>()
-//            {
-//                @Override
-//                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-//                {
-//                }
-//            });
-        }
-        return this.cancel;
+        return cancel;
     }
-    
+
+    public String getCancel()
+    {
+        return cancel.get();
+    }
+
+    public void setCancel(String cancel)
+    {
+        this.cancel.set(cancel);
+    }
+
     public void addDialogitem(Dialogitem dialogitem)
     {
         this.dialogitem.add(dialogitem);
     }
     
+    public Dialogitem addDialogitem()
+    {
+        Dialogitem newDialogitem = new Dialogitem();
+        dialogitem.add(newDialogitem);
+        return newDialogitem;
+    }
+
     @Override
     public String createSpecificMissionHeader()
     {
-        return utilitys.image(this.image.get()) + utilitys.nextdialogbuttontext(this.nextdialogbuttontext.get()) + utilitys.endbuttontext(this.endbuttontext.get()) + utilitys.textsize(this.textsize.get()) + utilitys.cancel(this.cancel.get());
+        return utilitys.image(image.get()) + utilitys.nextdialogbuttontext(nextdialogbuttontext.get()) + utilitys.endbuttontext(endbuttontext.get()) + utilitys.textsize(textsize.get()) + utilitys.cancel(cancel.get());
     }
 
     @Override
     public String assemble()
     {
-        return createMissionHeader() + utilitys.createStringFromArrayList(dialogitem) + createMissionTrailer();
+        return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + utilitys.createStringFromArrayList(dialogitem) + createMissionTrailer();
     }
-    
 }
