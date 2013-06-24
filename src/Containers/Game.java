@@ -13,13 +13,12 @@ import javafx.beans.property.StringProperty;
  *
  * @author Gregor
  */
-public class Game implements AssembleInterface
+public class Game2 implements AssembleInterface
 {
-
     private StringProperty id;
-    private ArrayList<ContainerToBeReplaced> containers;
+    private ArrayList<Container> containers;
 
-    public Game()
+    public Game2()
     {
         id = new SimpleStringProperty();
         containers = new ArrayList<>();
@@ -29,13 +28,16 @@ public class Game implements AssembleInterface
     public Boolean isComplete()
     {
         Boolean isComplete = true;
-        for (ContainerToBeReplaced container : containers) {
-            if (!container.isComplete()) {
+        for (Container container : containers)
+        {
+            if (!container.isComplete())
+            {
                 System.out.println("Container incomplete");
                 isComplete = false;
             }
         }
-        if (id.isNull().get()) {
+        if (id.isNull().get())
+        {
             System.out.println("Game ID Null");
             isComplete = false;
         }
@@ -57,12 +59,12 @@ public class Game implements AssembleInterface
         return id.get();
     }
 
-    public void addContainer(ContainerToBeReplaced container)
+    public void addContainer(Container container)
     {
         containers.add(container);
     }
 
-    public ArrayList<ContainerToBeReplaced> getContainers()
+    public ArrayList<Container> getContainers()
     {
         return containers;
     }
@@ -70,6 +72,6 @@ public class Game implements AssembleInterface
     @Override
     public String assemble()
     {
-        return "<game id=" + idProperty().get() + ">" + utilitys.createStringFromArrayList(containers) + "</game>";
+        return "<game id=\"" + idProperty().get() + "\">" + utilitys.createStringFromArrayList(containers) + "</game>";
     }
 }
