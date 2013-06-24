@@ -19,8 +19,8 @@ public class AudioRecord extends Mission
     public AudioRecord()
     {
         super("AudioRecord");
-        this.task = new SimpleStringProperty();
-        this.file = new SimpleStringProperty();
+        this.task = new SimpleStringProperty("");
+        this.file = new SimpleStringProperty("");
     }
     
     public StringProperty taskProperty()
@@ -43,5 +43,11 @@ public class AudioRecord extends Mission
     public String assemble()
     {
         return createMissionHeader() + createMissionTrailer();
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

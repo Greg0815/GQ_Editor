@@ -29,7 +29,15 @@ public class UtilityFunctions<T extends AssembleInterface>
     
     public String typeAndValue(String type, String value)
     {
-        return " " + type + "=\"" + value + "\"";
+        System.out.println("".equalsIgnoreCase(""));
+        if(value.isEmpty() || value == null || value.equalsIgnoreCase(""))
+        {
+            return "";
+        }
+        else
+        {
+            return " " + type + "=\"" + value + "\"";
+        }
     }
     
     public String typeAndValue(String type, Boolean value)

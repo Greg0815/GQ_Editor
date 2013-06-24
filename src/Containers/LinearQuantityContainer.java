@@ -4,6 +4,8 @@
  */
 package Containers;
 
+import Blocks.LinearQuantityBlock;
+
 /**
  *
  * @author Gregor

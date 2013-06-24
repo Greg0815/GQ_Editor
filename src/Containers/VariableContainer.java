@@ -4,6 +4,9 @@
  */
 package Containers;
 
+import Blocks.VariableBlock;
+import Main.GameElement;
+
 /**
  *
  * @author Gregor
@@ -22,6 +25,11 @@ public class VariableContainer extends Container
     {
         super(variableBlock.getId(), variableBlock.getMinMissionCount(), variableBlock.getMaxMissionCount(), variableBlock.getInternalConnector());
         this.addAllowedClasses(variableBlock.getMissionTypes());
+    }
+    
+    public void deleteGameElement(GameElement gameElement)
+    {
+        this.getGameElements().remove(gameElement);
     }
     
     public Boolean hasSpaceLeft()

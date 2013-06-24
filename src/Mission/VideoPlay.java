@@ -27,14 +27,14 @@ public class VideoPlay extends Mission
     public VideoPlay()
     {
         super("VideoPlay");
-        file = new SimpleStringProperty();
-        url = new SimpleStringProperty();
-        controllable = new SimpleBooleanProperty();
-        exitDialogTitle = new SimpleStringProperty();
-        exitDialogMessage = new SimpleStringProperty();
-        exitDialogKeepWatchingText = new SimpleStringProperty();
-        exitDialogWatchAgainText = new SimpleStringProperty();
-        exitDialogLeaveText = new SimpleStringProperty();
+        file = new SimpleStringProperty("");
+        url = new SimpleStringProperty("");
+        controllable = new SimpleBooleanProperty(true);
+        exitDialogTitle = new SimpleStringProperty("");
+        exitDialogMessage = new SimpleStringProperty("");
+        exitDialogKeepWatchingText = new SimpleStringProperty("");
+        exitDialogWatchAgainText = new SimpleStringProperty("");
+        exitDialogLeaveText = new SimpleStringProperty("");
         this.addNecessaryField("file", "url");
         this.addCompletenessVariable(file);
         this.addCompletenessVariable(url);
@@ -97,6 +97,12 @@ public class VideoPlay extends Mission
     public String assemble()
     {
         return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + createMissionTrailer();
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

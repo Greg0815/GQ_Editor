@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import Main.NumericTextField;
+import CustomInputNodes.NumericTextField;
 
 /**
  *

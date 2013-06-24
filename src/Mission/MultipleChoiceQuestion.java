@@ -27,9 +27,9 @@ public class MultipleChoiceQuestion extends Mission
     public MultipleChoiceQuestion()
     {
         super("MultipleChoiceQuestion");
-        loopUntilSuccess = new SimpleBooleanProperty();
-        shuffle = new SimpleBooleanProperty();
-        questiontext = new SimpleStringProperty();
+        loopUntilSuccess = new SimpleBooleanProperty(true);
+        shuffle = new SimpleBooleanProperty(true);
+        questiontext = new SimpleStringProperty("");
         answer = new ArrayList<>();
         addNecessaryField("questiontext", "answer");
         addCompletenessVariable(questiontext);
@@ -107,6 +107,22 @@ public class MultipleChoiceQuestion extends Mission
     @Override
     public String createSpecificMissionHeader()
     {
-        return utilitys.loopUntilSuccess(loopUntilSuccess.get()) + utilitys.shuffle(shuffle.get());
+        String returnString = "";
+        if(loopUntilSuccess.isBound())
+        {
+            returnString += utilitys.loopUntilSuccess(loopUntilSuccess.get());
+        }
+        if(shuffle.isBound())
+        {
+            returnString += utilitys.shuffle(shuffle.get());
+        }
+        return returnString;
+//        return utilitys.loopUntilSuccess(loopUntilSuccess.get()) + utilitys.shuffle(shuffle.get());
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

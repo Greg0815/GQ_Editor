@@ -4,6 +4,8 @@
  */
 package Mission.Rules;
 
+import Mission.Rules.Actions.Action;
+import Mission.Rules.Conditions.Condition;
 import Main.AssembleInterface;
 import java.util.ArrayList;
 import java.util.Arrays;

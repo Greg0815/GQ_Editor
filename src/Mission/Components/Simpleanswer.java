@@ -20,7 +20,7 @@ public class Simpleanswer extends MissionComponent implements Main.AssembleInter
     public Simpleanswer()
     {
         super();
-        this.answer = new SimpleStringProperty();
+        answer = new SimpleStringProperty("");
 //        this.necessaryFields = new ArrayList<>();
         this.addNecessaryFields("answer");
     }
@@ -45,12 +45,12 @@ public class Simpleanswer extends MissionComponent implements Main.AssembleInter
 
     public StringProperty answerProperty()
     {
-        return this.answer;
+        return answer;
     }
 
     public String getAnswer()
     {
-        return this.answer.get();
+        return answer.get();
     }
 
     public void setAnswer(String answer)
@@ -61,7 +61,7 @@ public class Simpleanswer extends MissionComponent implements Main.AssembleInter
     @Override
     public String assemble()
     {
-        return "<answer>" + this.answerProperty().get() + "</answer>";
+        return "<answer>" + answerProperty().get() + "</answer>";
     }
 
     @Override

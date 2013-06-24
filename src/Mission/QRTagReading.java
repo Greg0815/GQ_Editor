@@ -26,13 +26,13 @@ public class QRTagReading extends Mission
     public QRTagReading()
     {
         super("QRTagReading");
-        this.initial_image = new SimpleStringProperty();
-        this.if_right_image = new SimpleStringProperty();
-        this.if_wrong_image = new SimpleStringProperty();
-        this.mode = new SimpleBooleanProperty();
-        this.taskdescription = new SimpleStringProperty();
-        this.buttontext = new SimpleStringProperty();
-        this.endbuttontext = new SimpleStringProperty();
+        this.initial_image = new SimpleStringProperty("");
+        this.if_right_image = new SimpleStringProperty("");
+        this.if_wrong_image = new SimpleStringProperty("");
+        this.mode = new SimpleBooleanProperty(true);
+        this.taskdescription = new SimpleStringProperty("");
+        this.buttontext = new SimpleStringProperty("");
+        this.endbuttontext = new SimpleStringProperty("");
     }
     
     public StringProperty initial_imageProperty()
@@ -82,6 +82,12 @@ public class QRTagReading extends Mission
     public String assemble()
     {
         return createMissionHeader() + createMissionTrailer();
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

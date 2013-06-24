@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Containers;
+package Blocks;
 
+import Main.AssembleInterface.DISPLAYABLE;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.util.Pair;
@@ -12,21 +13,22 @@ import javafx.util.Pair;
  *
  * @author Gregor
  */
-public class Description2
+
+public class Description
 {
     private String gameDescription;
     private ArrayList<Block> blocks;
-    private ArrayList<BlockConnector2> connectors;
+    private ArrayList<BlockConnector> connectors;
     private ArrayList<Pair> defaults;       // TODO default-werte
-    private ArrayList<String> fieldsToShow;     // TODO anzuzeigende felder
+    private ArrayList<DISPLAYABLE> displayableFields;     // TODO anzuzeigende felder
 
-    public Description2(String gameDescription)
+    public Description(String gameDescription)
     {
         this.gameDescription = gameDescription;
         blocks = new ArrayList<>();
         connectors = new ArrayList<>();
         defaults = new ArrayList<>();
-        fieldsToShow = new ArrayList<>();
+        displayableFields = new ArrayList<>();
     }
 
     public String getGameDescription()
@@ -39,14 +41,14 @@ public class Description2
         return defaults;
     }
 
-    public ArrayList<String> getFieldsToShow()
+    public ArrayList<DISPLAYABLE> getDisplayableFields()
     {
-        return fieldsToShow;
+        return displayableFields;
     }
 
-    public void addFieldsToShow(String... fieldsToShow)         // evtl check for duplicates
+    public void addDisplayableFields(DISPLAYABLE... displayableFields)         // evtl check for duplicates
     {
-        this.fieldsToShow.addAll(Arrays.asList(fieldsToShow));
+        this.displayableFields.addAll(Arrays.asList(displayableFields));
     }
 
     public void addDefaults(Pair... defaults)         // evtl check for duplicates
@@ -69,23 +71,23 @@ public class Description2
         blocks.add(block);
     }
 
-    public void addBlockConnector(BlockConnector2 connector)
+    public void addBlockConnector(BlockConnector connector)
     {
         connectors.add(connector);
     }
 
-    public void addBlockConnector(BlockConnector2... connector)
+    public void addBlockConnector(BlockConnector... connector)
     {
         connectors.addAll(Arrays.asList(connector));
     }
 
     public void addBlockConnector(String trigger, Block toBlock, Block fromBlock)
     {
-        BlockConnector2 connector = new BlockConnector2(trigger, toBlock, fromBlock);
+        BlockConnector connector = new BlockConnector(trigger, toBlock, fromBlock);
         this.addBlockConnector(connector);
     }
 
-    public ArrayList<BlockConnector2> getBlockConnectors()
+    public ArrayList<BlockConnector> getBlockConnectors()
     {
         return connectors;
     }

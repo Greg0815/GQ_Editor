@@ -31,11 +31,11 @@ public class Hotspot extends GameElement implements AssembleInterface
     public Hotspot()
     {
         super();
-        this.initialVisibility = new SimpleBooleanProperty();
-        this.img = new SimpleStringProperty();
-        this.latitude = new SimpleFloatProperty();
-        this.longitude = new SimpleFloatProperty();
-        this.radius = new SimpleIntegerProperty();
+        this.initialVisibility = new SimpleBooleanProperty(true);
+        this.img = new SimpleStringProperty("");
+        this.latitude = new SimpleFloatProperty(0f);
+        this.longitude = new SimpleFloatProperty(0f);
+        this.radius = new SimpleIntegerProperty(10);
     }
     
     public FloatProperty latitudeProperty()

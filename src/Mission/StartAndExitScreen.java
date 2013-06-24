@@ -22,9 +22,9 @@ public class StartAndExitScreen extends Mission
     public StartAndExitScreen()
     {
         super("StartAndExitScreen");
-        image = new SimpleStringProperty();
-        duration = new SimpleIntegerProperty();
-        cancel = new SimpleStringProperty();
+        image = new SimpleStringProperty("");
+        duration = new SimpleIntegerProperty(5000);
+        cancel = new SimpleStringProperty("");
         addNecessaryField("image");
         this.addCompletenessVariable(image);
     }
@@ -96,6 +96,12 @@ public class StartAndExitScreen extends Mission
     public String assemble()
     {
         return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + createMissionTrailer();
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

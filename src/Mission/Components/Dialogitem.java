@@ -25,11 +25,11 @@ public class Dialogitem extends MissionComponent implements Main.AssembleInterfa
 
     public Dialogitem()
     {
-        this.speaker = new SimpleStringProperty();
-        this.sound = new SimpleStringProperty();
-        this.blocking = new SimpleBooleanProperty();
-        this.nextdialogbuttontext = new SimpleStringProperty();
-        this.dialog = new SimpleStringProperty();
+        this.speaker = new SimpleStringProperty("");
+        this.sound = new SimpleStringProperty("");
+        this.blocking = new SimpleBooleanProperty(true);
+        this.nextdialogbuttontext = new SimpleStringProperty("");
+        this.dialog = new SimpleStringProperty("");
         this.addNecessaryFields("speaker", "dialog");
 //        this.necessaryFields.add("dialog");
     }

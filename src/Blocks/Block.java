@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Containers;
+package Blocks;
 
 import Mission.Rules.Rule;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.Arrays;
  */
 public class Block
 {
-    public enum triggerType {       // TODO einbauen!
+    public enum triggerType {       // TODO Trigger Type als Parameter einbauen!
         ON_END, ON_START, ON_SUCCESS, ON_FAIL, ON_ENTER, ON_LEAVE
     }
     

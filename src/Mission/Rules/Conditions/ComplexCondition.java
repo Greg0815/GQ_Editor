@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Mission.Rules;
+package Mission.Rules.Conditions;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,7 @@ public abstract class ComplexCondition extends Condition
         conditions.add(condition);
     }
     
-    protected ArrayList<Condition> getConditionsArrayList()
+    public ArrayList<Condition> getConditionsArrayList()
     {
         return this.conditions;
     }

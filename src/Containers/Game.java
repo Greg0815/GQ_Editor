@@ -6,6 +6,7 @@ package Containers;
 
 import Main.AssembleInterface;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -13,17 +14,30 @@ import javafx.beans.property.StringProperty;
  *
  * @author Gregor
  */
-public class Game2 implements AssembleInterface
+public class Game implements AssembleInterface
 {
     private StringProperty id;
     private ArrayList<Container> containers;
+    private ArrayList<String> necessaryFields;
 
-    public Game2()
+    public Game()
     {
-        id = new SimpleStringProperty();
+        id = new SimpleStringProperty("");
         containers = new ArrayList<>();
+        necessaryFields = new ArrayList<>();
+        necessaryFields.add("id");
+    }
+    
+    public ArrayList<String> getNecessaryFields()
+    {
+        return necessaryFields;
     }
 
+    public void addNecessaryFields(String... necessaryFields)
+    {
+        this.necessaryFields.addAll(Arrays.asList(necessaryFields));
+    }
+    
     @Override
     public Boolean isComplete()
     {

@@ -28,11 +28,11 @@ public class TextQuestion extends Mission
     public TextQuestion()
     {
         super("TextQuestion");
-        this.question = new SimpleStringProperty();
-        this.loopUntilSuccess = new SimpleBooleanProperty();
-        this.prompt = new SimpleStringProperty();
-        this.replyOnCorrect = new SimpleStringProperty();
-        this.replyOnWrong = new SimpleStringProperty();
+        this.question = new SimpleStringProperty("");
+        this.loopUntilSuccess = new SimpleBooleanProperty(true);
+        this.prompt = new SimpleStringProperty("");
+        this.replyOnCorrect = new SimpleStringProperty("");
+        this.replyOnWrong = new SimpleStringProperty("");
         this.simpleanswer = new ArrayList<>();
         this.addNecessaryField("question", "simpleanswer");
         this.addCompletenessVariable(question);
@@ -96,5 +96,11 @@ public class TextQuestion extends Mission
     public String assemble()
     {
         return createMissionHeader() + "<answers>" + utilitys.createStringFromArrayList(simpleanswer) + "</answers>" + createMissionTrailer();
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

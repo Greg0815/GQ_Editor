@@ -15,7 +15,6 @@ import javafx.beans.property.StringProperty;
  */
 public class NPCTalk extends Mission
 {
-
     private StringProperty image;
     private StringProperty nextdialogbuttontext;
     private StringProperty endbuttontext;
@@ -26,11 +25,11 @@ public class NPCTalk extends Mission
     public NPCTalk()
     {
         super("NPCTalk");
-        image = new SimpleStringProperty();
-        nextdialogbuttontext = new SimpleStringProperty();
-        endbuttontext = new SimpleStringProperty();
-        textsize = new SimpleStringProperty();
-        cancel = new SimpleStringProperty();
+        image = new SimpleStringProperty("");
+        nextdialogbuttontext = new SimpleStringProperty("");
+        endbuttontext = new SimpleStringProperty("");
+        textsize = new SimpleStringProperty("");
+        cancel = new SimpleStringProperty("");
         dialogitem = new ArrayList<>();
         this.addNecessaryField("dialogitem");
         this.addCompletenessVariable(dialogitem);
@@ -75,7 +74,7 @@ public class NPCTalk extends Mission
     {
         this.dialogitem.add(dialogitem);
     }
-    
+
     public Dialogitem addDialogitem()
     {
         Dialogitem newDialogitem = new Dialogitem();
@@ -93,5 +92,11 @@ public class NPCTalk extends Mission
     public String assemble()
     {
         return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + utilitys.createStringFromArrayList(dialogitem) + createMissionTrailer();
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

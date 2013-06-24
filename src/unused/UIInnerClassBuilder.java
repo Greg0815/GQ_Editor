@@ -23,8 +23,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.BooleanStringConverter;
 import javafx.util.converter.NumberStringConverter;
-import Main.NumericTextField;
-import Main.NumericTextField;
+import CustomInputNodes.NumericTextField;
+import CustomInputNodes.NumericTextField;
 
 /**
  *

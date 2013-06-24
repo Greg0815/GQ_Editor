@@ -15,7 +15,6 @@ import java.util.Arrays;
  */
 abstract public class Mission extends GameElement implements AssembleInterface
 {
-
     private String type;
     private ArrayList<String> necessaryFields;
 
@@ -35,40 +34,6 @@ abstract public class Mission extends GameElement implements AssembleInterface
         this.necessaryFields = new ArrayList<>();
         this.necessaryFields.add("id");
         this.addCompletenessVariable(this.idProperty());
-    }
-
-    @Override
-    public Boolean isComplete()         // TODO: rework
-    {
-        Boolean isComplete = true;
-//        for (Object object : this.getCompletenessArrayList()) {
-////            System.out.println(object.getClass());
-////            if (object instanceof ArrayList) {            // TODO
-////                for (Object obj : ((ArrayList) object).toArray()) {
-////                    if (obj instanceof AssembleInterface) {
-////                        if (((AssembleInterface) obj).isComplete()) {
-////                            isComplete = false;
-////                        }
-////                        else if (obj instanceof Property) {
-////                            if (((Property) obj).getValue() == null) {
-////                                isComplete = false;
-////                            }
-////                        }
-////                    }
-////                }
-////            }
-//            if (object instanceof AssembleInterface) {
-//                if (((AssembleInterface) object).isComplete()) {
-//                    isComplete = false;
-//                }
-//            }
-//            else if (object instanceof Property) {
-//                if (((Property) object).getValue() == null) {
-//                    isComplete = false;
-//                }
-//            }
-//        }
-        return isComplete;
     }
 
     public ArrayList<String> getNecessaryFields()

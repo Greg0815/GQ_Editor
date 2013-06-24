@@ -19,8 +19,8 @@ public class Answer extends Simpleanswer
     public Answer()
     {
         super();
-        correct = new SimpleStringProperty();
-        onChoose = new SimpleStringProperty();
+        correct = new SimpleStringProperty("");
+        onChoose = new SimpleStringProperty("");
         addNecessaryFields("correct");
     }
     
@@ -72,7 +72,7 @@ public class Answer extends Simpleanswer
     @Override
     public String assemble()
     {
-        return "<answer" + utilitys.correct(this.correct.get()) + utilitys.onChoose(this.onChoose.get()) + ">" + this.getAnswer() + "</answer>";
+        return "<answer" + utilitys.correct(correct.get()) + utilitys.onChoose(onChoose.get()) + ">" + this.getAnswer() + "</answer>";
     }
     
     @Override

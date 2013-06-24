@@ -4,38 +4,30 @@
  */
 package Main;
 
-import Containers.Block;
-import Containers.BlockConnector;
-import Containers.BlockConnector2;
-import Containers.BlockToBeReplaced;
-import Containers.Description;
-import Containers.Description2;
-import Containers.Game2;
-import Containers.LinearBlock;
-import Containers.ModelCreator2;
-import Containers.TriggerAction;
-import Containers.UIBuilder;
-import Containers.VariableBlock;
+import Blocks.Block;
+import Blocks.BlockConnector;
+import Blocks.Description;
+import Blocks.LinearBlock;
+import Blocks.VariableBlock;
+import Main.AssembleInterface.DISPLAYABLE;
 import Mission.AudioRecord;
 import Mission.MapOverview;
 import Mission.MultipleChoiceQuestion;
 import Mission.NPCTalk;
 import Mission.QRTagReading;
-import Mission.Rules.ActionDecrementVariable;
-import Mission.Rules.ActionStartMission;
-import Mission.Rules.ComplexConditionAnd;
-import Mission.Rules.ComplexConditionIf;
-import Mission.Rules.ComplexConditionOr;
+import Mission.Rules.Actions.ActionDecrementVariable;
+import Mission.Rules.Actions.ActionStartMission;
+import Mission.Rules.Conditions.ComplexConditionAnd;
+import Mission.Rules.Conditions.ComplexConditionIf;
+import Mission.Rules.Conditions.ComplexConditionOr;
+import Mission.Rules.Conditions.SimpleConditionComparison;
+import Mission.Rules.Conditions.SimpleConditionMissionState;
 import Mission.Rules.Rule;
-import Mission.Rules.SimpleConditionComparison;
-import Mission.Rules.SimpleConditionMissionState;
 import Mission.StartAndExitScreen;
 import Mission.TextQuestion;
 import Mission.VideoPlay;
 import Mission.WebPage;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javax.xml.transform.TransformerConfigurationException;
@@ -48,48 +40,6 @@ import javax.xml.transform.TransformerException;
 public class Main extends Application
 {
 
-//    Game testGame;
-////    OldUIBuilder uiBuilder;
-//    VBox rootNodeVBox;
-//    Label output;
-//    Scene firstScene;
-//    Button assembleWWMButton;
-//    Button styleSwitcher;
-//    Button showHideFields;
-//    TextArea outputTextArea;
-//
-//    private void initialize()
-//    {
-//        rootNodeVBox = new VBox();
-//        firstScene = new Scene(rootNodeVBox, 600, 800);
-//        firstScene.getStylesheets().add("Styles/controlStyle1.css");
-//        outputTextArea = new TextArea();
-//        assembleWWMButton = new Button("assemble WWM");
-//        styleSwitcher = new Button("Switch Style");
-//        showHideFields = new Button("Show/Hide Fields");
-//    }
-//
-//    private void layout()
-//    {
-//        rootNodeVBox.getChildren().addAll(styleSwitcher, assembleWWMButton, showHideFields);
-//    }
-//
-//    private void bind()
-//    {
-//        BooleanStringConverter converter = new BooleanStringConverter();
-//
-//        assembleWWMButton.setOnAction(new EventHandler<ActionEvent>()
-//        {
-//            @Override
-//            public void handle(ActionEvent event)
-//            {
-//                if (!rootNodeVBox.getChildren().contains(outputTextArea)) {
-//                    rootNodeVBox.getChildren().add(outputTextArea);
-//                }
-//                outputTextArea.setText(testGame.assemble());
-//            }
-//        });
-//
 //        styleSwitcher.setOnAction(new EventHandler<ActionEvent>()
 //        {
 //            @Override
@@ -161,126 +111,11 @@ public class Main extends Application
 //
 //    }
 
-//    private void simpleTest1()
-//    {
-//        try {
-//            // Missions
-//            MultipleChoiceQuestion mmcq = new MultipleChoiceQuestion();
-//            StartAndExitScreen msaes = new StartAndExitScreen();
-//            AudioRecord mar = new AudioRecord();
-//            MapOverview mmo = new MapOverview();
-//            NPCTalk mnpct = new NPCTalk();
-//            QRTagReading mqrtr = new QRTagReading();
-//            TextQuestion mtq = new TextQuestion();
-//            VideoPlay mvp = new VideoPlay();
-//            WebPage mwp = new WebPage();
-//
-//            // Lists
-////            LinearList firstList = new LinearList();
-////            LinearList secondList = new LinearList();
-//
-//            testGame = new Game();
-//
-//            // Filling Lists
-////            firstList.addGameObject(msaes, mar, mmo);
-////            secondList.addGameObject(mnpct, mqrtr, mtq);
-////            testGame.add(mmcq, firstList, secondList, mvp, mwp);
-//
-//            // Connecting Missions
-//            FromToTriggerAction ruling1 = new FromToTriggerAction(0, 1, "onEnd", "StartMission");
-//            FromToTriggerAction ruling2 = new FromToTriggerAction(1, 2, "onEnd", "StartMission");
-//            FromToTriggerAction ruling3 = new FromToTriggerAction(2, 3, "onEnd", "StartMission");
-//            FromToTriggerAction ruling4 = new FromToTriggerAction(3, 4, "onEnd", "StartMission");
-////            testGame.addRule(ruling1, ruling2, ruling3, ruling4);
-//
-////            uiBuilder = new OldUIBuilder(testGame);
-//
-//            // Default Values
-//            Pair<String, Integer> durationDefault = new Pair("duration", 42);
-//            Pair<String, Boolean> loopUntilSuccessDefault = new Pair("loopUntilSuccess", true);
-//            Pair<String, String> cancelDefault = new Pair("cancel", "false");
-//            Pair<String, Boolean> shuffleDefault = new Pair("shuffle", true);
-//
-////            uiBuilder.addDefault(durationDefault, loopUntilSuccessDefault, cancelDefault, shuffleDefault);
-////
-////            rootNodeVBox.getChildren().add(uiBuilder.makeForm());
-//        }
-//        catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//    }
-//
-//    private void simpleTest2() throws NoSuchFieldException, TransformerConfigurationException, TransformerException
-//    {
-//        testGame = new Game();
-////        LinearList innerList = new LinearList();
-////        innerList.setMinAndMax(2, 15);
-//        MultipleChoiceQuestion mcq1 = new MultipleChoiceQuestion();
-//        mcq1.setId("MCQ1");
-//        MultipleChoiceQuestion mcq2 = new MultipleChoiceQuestion();
-//        mcq2.setId("MCQ2");
-//        MultipleChoiceQuestion mcq3 = new MultipleChoiceQuestion();
-//        mcq3.setId("MCQ3");
-////        innerList.addGameObject(mcq1, mcq2, mcq3);
-//        StartAndExitScreen startSAES = new StartAndExitScreen();
-//        startSAES.setId("Start SAES");
-//        startSAES.setDuration(5000);
-//        startSAES.setCancel("false");
-//        StartAndExitScreen failSAES = new StartAndExitScreen();
-//        failSAES.setId("Fail SAES");
-//        StartAndExitScreen successSAES = new StartAndExitScreen();
-//        successSAES.setId("Success SAES");
-////        testGame.add(startSAES, innerList, failSAES, successSAES);
-//
-//
-//        try {
-//            FromToTriggerAction startToMCQ = new FromToTriggerAction(0, 1, "onEnd", "StartMission");
-//            FromToTriggerAction listToFail = new FromToTriggerAction(1, 2, "onFail", "StartMission");
-//            FromToTriggerAction listToSuccess = new FromToTriggerAction(1, 3, "onSuccess", "StartMission");
-////            testGame.addRule(startToMCQ, listToFail, listToSuccess);
-//        }
-//        catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-////        uiBuilder = new OldUIBuilder(testGame);
-//
-//        Source xmlInput = new StreamSource(new StringReader(testGame.assemble()));
-//        StreamResult xmlOutput = new StreamResult(new StringWriter());
-//
-//        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-//        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-//        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-//        transformer.transform(xmlInput, xmlOutput);
-////        System.out.println(xmlOutput.getWriter().toString());
-//
-//
-//        Pair<String, Integer> durationDefault = new Pair("duration", 42);
-//        Pair<String, Boolean> loopUntilSuccessDefault = new Pair("loopUntilSuccess", true);
-//        Pair<String, String> cancelDefault = new Pair("cancel", "false");
-//        Pair<String, Boolean> shuffleDefault = new Pair("shuffle", true);
-//
-////        uiBuilder.addDefault(durationDefault, loopUntilSuccessDefault, cancelDefault, shuffleDefault);
-//
-////        try {
-//////            rootNodeVBox.getChildren().addGameObject(saes.makeForm());
-//////            rootNodeVBox.getChildren().addGameObject(mcq.makeForm());
-//////            rootNodeVBox.getChildren().addGameObject(npctalk.makeForm());
-//////            rootNodeVBox.getChildren().add(wwm.makeForm());
-//////            rootNodeVBox.getChildren().add(newGame.makeForm());
-//////            System.out.println(wwmGame.getMissionMultipleChoiceQuestionCount());
-////            //        rootNodeVBox.getChildren().addGameObject(uiBuilder.makeMissionForm());
-//////        } catch ( IllegalAccessException | NoSuchMethodException | IllegalArgumentException | InvocationTargetException ex)
-////        }
-////        catch (IllegalArgumentException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-////            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-////        }
-//    }
     
-    private Description2 minimalExample()
+    private Description minimalExample()
     {
-        Description2 description = new Description2("Minimum");
+        Description description = new Description("Minimum");
+        description.addDisplayableFields(DISPLAYABLE.IMAGE, DISPLAYABLE.SHUFFLE);
         
         VariableBlock varBlo = new VariableBlock("VarBlo");
         
@@ -304,7 +139,7 @@ public class Main extends Application
         linBlo.addMissionTypesAsLinearSequence(MultipleChoiceQuestion.class);
         linBlo.addSuccessRule(successRule);
         
-        BlockConnector2 varToLin = new BlockConnector2("onFail", varBlo, linBlo);
+        BlockConnector varToLin = new BlockConnector("onFail", varBlo, linBlo);
         
         description.addBlock(varBlo, linBlo);
         description.addBlockConnector(varToLin);
@@ -312,9 +147,9 @@ public class Main extends Application
         return description;
     }
     
-    private Description2 newContainerModels()
+    private Description newContainerModels()
     {
-        Description2 description = new Description2("TestZweck");
+        Description description = new Description("TestZweck");
         
         VariableBlock variableBlock1 = new VariableBlock("VariabelEins", -1, 3, "onSuccess");
         VariableBlock variableBlock2 = new VariableBlock("VariableZwei", 2, "onFail");
@@ -332,11 +167,11 @@ public class Main extends Application
         linearBlock2.addMissionTypesAsLinearSequence(StartAndExitScreen.class, TextQuestion.class, MapOverview.class);
         linearBlock3.addMissionTypesAsLinearSequence(NPCTalk.class, QRTagReading.class);
         
-        BlockConnector2 V1ToV2 = new BlockConnector2("onEnd", variableBlock1, variableBlock2);
-        BlockConnector2 V2ToV3 = new BlockConnector2("onSuccess", variableBlock2, variableBlock3);
-        BlockConnector2 V3ToL1 = new BlockConnector2("onFail", variableBlock3, linearBlock1);
-        BlockConnector2 L1ToL2 = new BlockConnector2("onEnter", linearBlock1, linearBlock2);
-        BlockConnector2 L2ToL3 = new BlockConnector2("onBegin", linearBlock2, linearBlock3);
+        BlockConnector V1ToV2 = new BlockConnector("onEnd", variableBlock1, variableBlock2);
+        BlockConnector V2ToV3 = new BlockConnector("onSuccess", variableBlock2, variableBlock3);
+        BlockConnector V3ToL1 = new BlockConnector("onFail", variableBlock3, linearBlock1);
+        BlockConnector L1ToL2 = new BlockConnector("onEnter", linearBlock1, linearBlock2);
+        BlockConnector L2ToL3 = new BlockConnector("onBegin", linearBlock2, linearBlock3);
         
         description.addBlock(variableBlock1, variableBlock2, variableBlock3, linearBlock1, linearBlock2, linearBlock3);
         description.addBlockConnector(V1ToV2, V2ToV3, V3ToL1, L1ToL2, L2ToL3);
@@ -344,9 +179,9 @@ public class Main extends Application
         return description;
     }
     
-    private Description2 opaEnkel(){
+    private Description opaEnkel(){
         
-        Description2 opaEnkel = new Description2("Opa Enkel App");
+        Description opaEnkel = new Description("Opa Enkel App");
         
         LinearBlock block0 = new LinearBlock("Willkommen", 2, "onEnd");
         LinearBlock block1 = new LinearBlock("Spiel", 5, "onEnd");
@@ -360,11 +195,11 @@ public class Main extends Application
         block3.addMissionTypesAsLinearSequence(StartAndExitScreen.class);  // Hier müsste die Mission ImageCapture rein
         block4.addMissionTypesAsLinearSequence(NPCTalk.class, AudioRecord.class);
         
-        BlockConnector2 willkommenZuSpiel = new BlockConnector2("onEnd", block0, block1);
-        BlockConnector2 spielZuMultipleChoice = new BlockConnector2("onEnd", block1, block2);
+        BlockConnector willkommenZuSpiel = new BlockConnector("onEnd", block0, block1);
+        BlockConnector spielZuMultipleChoice = new BlockConnector("onEnd", block1, block2);
         block2.addEndRule(opaEnkelSplitRuleZuBlock2(block3));
         block2.addEndRule(opaEnkelSplitRuleZuBlock3(block4));
-        BlockConnector2 imageCaptureZuAbschluss = new BlockConnector2("onEnd", block3, block4);
+        BlockConnector imageCaptureZuAbschluss = new BlockConnector("onEnd", block3, block4);
         
         opaEnkel.addBlock(block0, block1, block2, block3, block4);
         opaEnkel.addBlockConnector(willkommenZuSpiel, spielZuMultipleChoice, imageCaptureZuAbschluss);
@@ -374,14 +209,6 @@ public class Main extends Application
     
     private Rule opaEnkelSplitRuleZuBlock3(Block block3)
     {
-        /*
-                rule
-                        if
-                                eq var select num 4
-                        /if
-                /rule
-                action start mission block 3
-         */
         SimpleConditionComparison comp4 = new SimpleConditionComparison("eq", "var", "select", "num", "4");
         ComplexConditionIf ifCondition = new ComplexConditionIf();
         Rule onEndRule2 = new Rule();
@@ -396,18 +223,6 @@ public class Main extends Application
     
     private Rule opaEnkelSplitRuleZuBlock2(Block block2)
     {
-        /*
-                rule
-                        if
-                                or
-                                        eq var select num 1
-                                        eq var select num 2
-                                        eq var select num 3
-                                /or
-                        /if
-                /rule
-                action start mission block 2
-         */
         SimpleConditionComparison comp1 = new SimpleConditionComparison("eq", "var", "select", "num", "1");
         SimpleConditionComparison comp2 = new SimpleConditionComparison("eq", "var", "select", "num", "2");
         SimpleConditionComparison comp3 = new SimpleConditionComparison("eq", "var", "select", "num", "3");
@@ -425,78 +240,13 @@ public class Main extends Application
         return onEndRule1;
     }
 
-//    private Description wwmDescription()
-//    {
-//        Description wwmGameDescription = new Description("Wer wird Millionär - Beantworte 15 Fragen richtig und gewinne eine virtuelle Million!");
-//        BlockToBeReplaced failBlock = new BlockToBeReplaced("fail");
-//        failBlock.addMissionTypes("StartAndExitScreen");
-//        BlockToBeReplaced openingBlock = new BlockToBeReplaced("opening");
-//        openingBlock.addMissionTypes("StartAndExitScreen");
-//        openingBlock.addTriggerActionParameter(new TriggerAction("onStart", "vibrate", "5000"), new TriggerAction("onStart", "incrementVariable", "temp"));
-//        openingBlock.addTriggerActionParameter(new TriggerAction("onLeave", "startMission", failBlock));        // testzweck: TriggerAction verhalten mit block parameter
-//        BlockToBeReplaced questionBlock = new BlockToBeReplaced("questions", 15);
-//        questionBlock.addMissionTypes("MultipleChoiceQuestion", "TextQuestion");
-//        questionBlock.setInternalConnectorToOnSuccess();
-//
-//        BlockToBeReplaced successBlock = new BlockToBeReplaced("success");
-//        successBlock.addMissionTypes("NPCTalk");
-//
-//
-//        wwmGameDescription.addBlock(openingBlock, questionBlock, successBlock, failBlock);
-//        BlockConnector openingToQuestion = new BlockConnector("onEnd", openingBlock, questionBlock);
-//        BlockConnector questionToSuccess = new BlockConnector("onSuccess", questionBlock, successBlock);
-//        BlockConnector questionToFail = new BlockConnector("onFail", questionBlock, failBlock);
-//        wwmGameDescription.addBlockConnector(openingToQuestion, questionToFail, questionToSuccess);
-//        return wwmGameDescription;
-//    }
-    
-//    private Game2 buildUI(Description2 description, Stage primaryStage)
-//    {
-//        VBox rootNode = new VBox();
-//        Scene secondaryScene = new Scene(rootNode, 800, 600);
-//        ModelCreator2 model = new ModelCreator2(description);
-//        Game2 game = model.createModel();
-//        UIBuilder newUI = new UIBuilder(game);
-//        rootNode.getChildren().add(newUI.parseGame());
-//        primaryStage.setScene(secondaryScene);
-//        primaryStage.show();
-//        return game;
-//    }
-    
-//    private Scene editorOberfläche(final Stage primaryStage)
-//    {
-//        final Game currentGame;
-//        VBox sceneRootVBox = new VBox();
-//        Scene editorScene = new Scene(sceneRootVBox, 800, 600);
-//        final ChoiceBox choiceBox = new ChoiceBox();
-//        Button makeNewGame = new Button("Make selected Game");
-////        makeNewGame.setOnAction(new EventHandler<ActionEvent>(){
-////            public void handle(ActionEvent t)
-////            {
-////                currentGame = buildUI((Description)choiceBox.getSelectionModel().getSelectedItem(), primaryStage);
-////            }
-////                
-////        });
-////        ArrayList<Description> descriptions = new ArrayList<>();
-////        descriptions.add(FXCollections.observableArrayList(wwmDescription()));
-//        choiceBox.setItems(FXCollections.observableArrayList(wwmDescription()));
-//        return editorScene;
-//    }
 
     @Override
     public void start(final Stage primaryStage) throws NoSuchFieldException, TransformerConfigurationException, TransformerException
     {
-        EditorOberflaeche2 editor = new EditorOberflaeche2(primaryStage, new Pair("OpaEnkel", opaEnkel()), new Pair("neue Modelle", newContainerModels()), new Pair("minEx", minimalExample()));
+        EditorOberflaeche editor = new EditorOberflaeche(primaryStage, new Pair("OpaEnkel", opaEnkel()), new Pair("neue Modelle", newContainerModels()), new Pair("minEx", minimalExample()));
         primaryStage.setScene(editor.makeGameSelectionOberflaeche());
-//        Game tmp = buildUI(wwmDescription(), primaryStage);
-//        initialize();
-//        layout();
-//        bind();
-//
-//        simpleTest1();
-//        wwmDescription();
-//        primaryStage.setScene(firstScene);
-//        primaryStage.setTitle("GeoQuest Spiele-Editor");
+
         primaryStage.show();
     }
 

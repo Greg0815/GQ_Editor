@@ -4,10 +4,8 @@
  */
 package Main;
 
-import Containers.Description2;
-import Containers.Game2;
-import Containers.ModelCreator2;
-import Containers.UIBuilder;
+import Blocks.Description;
+import Containers.Game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.collections.FXCollections;
@@ -21,6 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -29,27 +29,27 @@ import javafx.util.Pair;
  *
  * @author Gregor
  */
-public class EditorOberflaeche2
+public class EditorOberflaeche
 {
     private Stage stage;
     private Scene gameSelect;
     private Scene gameEdit;
-    private ArrayList<Pair<String, Description2>> descriptions;
-    private ArrayList<Game2> games;
+    private ArrayList<Pair<String, Description>> descriptions;
+    private ArrayList<Game> games;
     private ListView<String> gamesList;
     private ObservableList<String> obsi;
     private ChoiceBox descriptionSelector;
     private TextArea assembleOutput;
     private ArrayList<String> choiceBoxSelectionDinger;
-    private ArrayList<ModelCreator2> modelCreators;
+    private ArrayList<ModelCreator> modelCreators;
 
-//    public Game2 findGameForDescription(Description2 description)
+//    public Game findGameForDescription(Description description)
 //    {
 //        for()
 //    }
-    public ModelCreator2 findModelCreatorForGame(Game2 game)
+    public ModelCreator findModelCreatorForGame(Game game)
     {
-        for (ModelCreator2 creator : modelCreators)
+        for (ModelCreator creator : modelCreators)
         {
             if (creator.getGame().equals(game))
             {
@@ -59,7 +59,7 @@ public class EditorOberflaeche2
         return null;
     }
 
-    public EditorOberflaeche2(Stage stage, Pair<String, Description2>... descriptions)
+    public EditorOberflaeche(Stage stage, Pair<String, Description>... descriptions)
     {
         this.stage = stage;
         this.descriptions = new ArrayList<>();
@@ -95,14 +95,35 @@ public class EditorOberflaeche2
         gameSelect = new Scene(rootNode, 1280, 720);
 
         Button createGameButton = new Button("Make Selected Game");
-        createGameButton.setOnAction(new EventHandler<ActionEvent>()
-        {
+        createGameButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
             @Override
-            public void handle(ActionEvent t)
+            public void handle(MouseEvent t)
             {
-                stage.setScene(makeGameEditingOberflaeche());
+                if(t.getButton() == MouseButton.PRIMARY)
+                {
+                    stage.setScene(makeGameEditingOberflaeche());
+                }
+//                if(t.isSecondaryButtonDown())
+//                {
+//                    System.out.println("Right Button");
+//                }
+//                else if(t.isPrimaryButtonDown())
+//                {
+//                    System.out.println("Left Button");
+//                    stage.setScene(makeGameEditingOberflaeche());
+//                }
             }
+            
         });
+//        createGameButton.setOnAction(new EventHandler<ActionEvent>()
+//        {
+//            @Override
+//            public void handle(ActionEvent t)
+//            {
+//                stage.setScene(makeGameEditingOberflaeche());
+//            }
+//        });
 
         Button assembleGame = new Button("assemble selected game");
         assembleGame.setOnAction(new EventHandler<ActionEvent>()
@@ -111,7 +132,7 @@ public class EditorOberflaeche2
             public void handle(ActionEvent t)
             {
                 String gameName = gamesList.getSelectionModel().getSelectedItem();
-                Game2 game = findGameByGameName(gameName);
+                Game game = findGameByGameName(gameName);
                 System.out.println("GameName = " + gameName + ";;; Game ID = " + game.getId());
                 findModelCreatorForGame(game).applyDescriptionRules();
                 assembleOutput.setText(game.assemble());
@@ -121,9 +142,9 @@ public class EditorOberflaeche2
         return gameSelect;
     }
 
-    private Game2 findGameByGameName(String gameName)
+    private Game findGameByGameName(String gameName)
     {
-        for (Game2 game : games)
+        for (Game game : games)
         {
             if(game.getId().equalsIgnoreCase(gameName))
             {
@@ -139,18 +160,18 @@ public class EditorOberflaeche2
         gameEdit = new Scene(rootNode, 1280, 720);
         Button endButton = new Button("speichern und raus");
 
-        Description2 selectedDescription = null;
+        Description selectedDescription = null;
         for (Pair pair : descriptions)
         {
             if (pair.getKey().equals(descriptionSelector.getSelectionModel().getSelectedItem()))
             {
-                selectedDescription = (Description2) pair.getValue();
+                selectedDescription = (Description) pair.getValue();
             }
         }
 
-        ModelCreator2 newModelCreator = new ModelCreator2(selectedDescription);
+        ModelCreator newModelCreator = new ModelCreator(selectedDescription);
         modelCreators.add(newModelCreator);
-        final Game2 newGame = newModelCreator.createModel();
+        final Game newGame = newModelCreator.createModel();
         endButton.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override

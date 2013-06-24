@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Containers;
+package Blocks;
 
 import Mission.Rules.Trigger;
 
@@ -10,7 +10,7 @@ import Mission.Rules.Trigger;
  *
  * @author Gregor
  */
-public class BlockConnector2
+public class BlockConnector
 {
 
     private String trigger;
@@ -26,7 +26,7 @@ public class BlockConnector2
 //        this.toBlockID = toBlockID;
 //    }
     
-    public BlockConnector2(String trigger, Block fromBlock, Block toBlock)
+    public BlockConnector(String trigger, Block fromBlock, Block toBlock)
     {
         this.trigger = trigger;
         this.fromBlock = fromBlock;

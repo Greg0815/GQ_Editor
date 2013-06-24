@@ -20,9 +20,9 @@ public class WebPage extends Mission
     public WebPage()
     {
         super("WebPage");
-        url = new SimpleStringProperty();
-        file = new SimpleStringProperty();
-        cancel = new SimpleStringProperty();
+        url = new SimpleStringProperty("");
+        file = new SimpleStringProperty("");
+        cancel = new SimpleStringProperty("");
     }
 
     public StringProperty urlProperty()
@@ -60,5 +60,11 @@ public class WebPage extends Mission
     public String assemble()
     {
         return createMissionHeader() + createMissionTrailer();
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

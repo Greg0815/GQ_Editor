@@ -2,11 +2,20 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Containers;
+package Main;
 
-import Main.GameElement;
-import Mission.Rules.Action;
-import Mission.Rules.ActionStartMission;
+import Blocks.Block;
+import Blocks.BlockConnector;
+import Blocks.Description;
+import Blocks.LinearBlock;
+import Blocks.LinearQuantityBlock;
+import Blocks.VariableBlock;
+import Containers.Container;
+import Containers.Game;
+import Containers.LinearContainer;
+import Containers.VariableContainer;
+import Mission.Rules.Actions.Action;
+import Mission.Rules.Actions.ActionStartMission;
 import Mission.Rules.Rule;
 import Mission.Rules.Trigger;
 import java.util.ArrayList;
@@ -15,28 +24,28 @@ import java.util.ArrayList;
  *
  * @author Gregor
  */
-public class ModelCreator2
+public class ModelCreator
 {
-    Description2 description;
-    Game2 game;
+    Description description;
+    Game game;
 
-    public ModelCreator2(Description2 description)
+    public ModelCreator(Description description)
     {
         this.description = description;
     }
 
-//    public Description2 getDescription()
+//    public Description getDescription()
 //    {
 //        return description;
 //    }
-    public Game2 getGame()
+    public Game getGame()
     {
         return game;
     }
 
-    public Game2 createModel()
+    public Game createModel()
     {
-        game = new Game2();
+        game = new Game();
 
         for (Block block : description.getBlocks())
         {
@@ -84,7 +93,7 @@ public class ModelCreator2
         applyInternalConnector();
     }
 
-    public void applyDescriptionRules(Game2 game)
+    public void applyDescriptionRules(Game game)
     {
         this.game = game;
         applyBlockConnectors();
@@ -129,7 +138,7 @@ public class ModelCreator2
 
     private void applyBlockConnectors()
     {
-        for (BlockConnector2 blockConnector : description.getBlockConnectors())
+        for (BlockConnector blockConnector : description.getBlockConnectors())
         {
             Container from = getContainerByIdString(blockConnector.getFromBlockId());
             Container to = getContainerByIdString(blockConnector.getToBlockId());

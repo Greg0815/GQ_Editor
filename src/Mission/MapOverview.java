@@ -26,7 +26,7 @@ public class MapOverview extends Mission implements AssembleInterface
     public MapOverview()
     {
         super("MapOverview");
-        this.mapkind = new SimpleStringProperty();
+        this.mapkind = new SimpleStringProperty("");
         this.zoomlevel = new SimpleIntegerProperty();
         this.hotspots = new ArrayList<>();
     }
@@ -56,6 +56,12 @@ public class MapOverview extends Mission implements AssembleInterface
     public String assemble()
     {
         return createMissionHeader() + utilitys.createStringFromArrayList(hotspots) + createMissionTrailer();
+    }
+
+    @Override
+    public Boolean isComplete()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
