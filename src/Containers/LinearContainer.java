@@ -5,6 +5,7 @@
 package Containers;
 
 import Blocks.LinearBlock;
+import Main.GameComponent;
 
 /**
  *
@@ -38,7 +39,22 @@ public class LinearContainer extends Container
     @Override
     public Boolean isComplete()
     {
-        // TODO implementation
-        return true;
+        Boolean isComplete = true;
+        for(GameComponent gameComponent : this.getGameElements())
+        {
+            if(!gameComponent.isComplete())
+            {
+                System.out.println("GameComponent incomplete: " + gameComponent.getId());
+                isComplete = false;
+                break;
+            }
+        }
+        return isComplete;
+    }
+
+    @Override
+    protected void addNecessaryAndOptionalFields()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

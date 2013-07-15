@@ -16,55 +16,85 @@ public class WebPage extends Mission
     private StringProperty url;
     private StringProperty file;
     private StringProperty cancel;
-    
+
     public WebPage()
     {
         super("WebPage");
         url = new SimpleStringProperty("");
         file = new SimpleStringProperty("");
         cancel = new SimpleStringProperty("");
+        addNecessaryAndOptionalFields();
+    }
+
+    public String getUrl()
+    {
+        return url.get();
+    }
+
+    public String getFile()
+    {
+        return file.get();
+    }
+
+    public String getCancel()
+    {
+        return cancel.get();
+    }
+
+    public void setUrl(String url)
+    {
+        this.url.set(url);
+    }
+
+    public void setFile(String file)
+    {
+        this.file.set(file);
+    }
+
+    public void setCancel(String cancel)
+    {
+        this.cancel.set(cancel);
     }
 
     public StringProperty urlProperty()
     {
         return url;
     }
-    
+
     public StringProperty fileProperty()
     {
         return file;
     }
-    
+
     public StringProperty cancelProperty()
     {
         return cancel;
     }
-    
-    public String getCancel()
-    {
-        return this.cancel.get();
-    }
-    
-    public void setCancel(String cancel)
-    {
-        this.cancel.set(cancel);
-    }
-    
-    @Override
-    public String createSpecificMissionHeader()
-    {
-        return utilitys.url(url.get()) + utilitys.file(file.get()) + utilitys.cancel(cancel.get());
-    }
+
+//    @Override
+//    public String createSpecificMissionHeader()
+//    {
+//        return utilitys.url(url.get()) + utilitys.file(file.get()) + utilitys.cancel(cancel.get());
+//    }
 
     @Override
     public String assemble()
     {
-        return createMissionHeader() + createMissionTrailer();
+//        return createMissionHeader() + buildMissionTail();
+        return buildMissionHead() + buildMissionTail();
     }
 
+//    @Override
+//    public Boolean isComplete()
+//    {
+//        Boolean isComplete = true;
+//        return isComplete;
+//    }
+
     @Override
-    public Boolean isComplete()
+    protected final void addNecessaryAndOptionalFields()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.addNecessaryHeaderFields(getFieldByString("url"));
+        this.addOptionalHeaderFields(getFieldByString("cancel"), getFieldByString("file"));
     }
 }

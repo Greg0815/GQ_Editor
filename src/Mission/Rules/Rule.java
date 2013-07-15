@@ -7,6 +7,7 @@ package Mission.Rules;
 import Mission.Rules.Actions.Action;
 import Mission.Rules.Conditions.Condition;
 import Main.AssembleInterface;
+import Main.BaseComponent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -14,7 +15,7 @@ import java.util.Arrays;
  *
  * @author Gregor
  */
-public class Rule implements AssembleInterface
+public class Rule extends BaseComponent
 {
     private ArrayList<Condition> conditions;
     private ArrayList<Action> actions;
@@ -66,5 +67,11 @@ public class Rule implements AssembleInterface
     public Boolean isComplete()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected void addNecessaryAndOptionalFields()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -4,6 +4,8 @@
  */
 package Mission.Components;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -11,79 +13,99 @@ import javafx.beans.property.StringProperty;
  *
  * @author Gregor
  */
-public class Answer extends Simpleanswer
+public class Answer extends MissionComponent
 {
-    private StringProperty correct;
+    private StringProperty answer;
+    private BooleanProperty correct;
     private StringProperty onChoose;
-    
+
     public Answer()
     {
         super();
-        correct = new SimpleStringProperty("");
+        answer = new SimpleStringProperty("");
+        correct = new SimpleBooleanProperty(true);
         onChoose = new SimpleStringProperty("");
-        addNecessaryFields("correct");
-    }
-    
-    public Answer(String answer, String correct)
-    {
-        super(answer);
-        this.correct = new SimpleStringProperty(correct);
-        onChoose = new SimpleStringProperty(Boolean.parseBoolean(correct) ? "Gute Wahl" : "Schlechte Wahl");
-        addNecessaryFields("correct");
-    }
-    
-    public Answer(String answer, String correct, String onChoose)
-    {
-        super(answer);
-        this.correct = new SimpleStringProperty(correct);
-        this.onChoose = new SimpleStringProperty(onChoose);
-        addNecessaryFields("correct");
+        addNecessaryAndOptionalFields();
     }
 
-    public StringProperty correctProperty()
+//    public Answer(String answer, String correct)
+//    {
+//        super(answer);
+//        this.correct = new SimpleStringProperty(correct);
+//        onChoose = new SimpleStringProperty(Boolean.parseBoolean(correct) ? "Gute Wahl" : "Schlechte Wahl");
+//        addNecessaryFields("correct");
+//    }
+//    
+//    public Answer(String answer, String correct, String onChoose)
+//    {
+//        super(answer);
+//        this.correct = new SimpleStringProperty(correct);
+//        this.onChoose = new SimpleStringProperty(onChoose);
+//        addNecessaryFields("correct");
+//    }
+    @Override
+    protected final void addNecessaryAndOptionalFields()
     {
-        return correct;
+        addNecessaryHeaderFields(getFieldByString("correct"), getFieldByString("answer"));
+        addOptionalHeaderFields(getFieldByString("onChoose"));
     }
-    
-    public String getCorrect()
+
+    public String getAnswer()
+    {
+        return answer.get();
+    }
+    public Boolean getCorrect()
     {
         return correct.get();
     }
-    
-    public void setCorrect(String correct)
-    {
-        this.correct.set(correct);
-    }
-    
-    public StringProperty onChooseProperty()
-    {
-        return onChoose;
-    }
-    
+
     public String getOnChoose()
     {
         return onChoose.get();
     }
+    public void setAnswer(String answer)
+    {
+        this.answer.set(answer);
+    }
+
+    public void setCorrect(Boolean correct)
+    {
+        this.correct.set(correct);
+    }
+
     public void setOnChoose(String onChoose)
     {
         this.onChoose.set(onChoose);
     }
-    
+    public StringProperty answerProperty()
+    {
+        return answer;
+    }
+
+    public BooleanProperty correctProperty()
+    {
+        return correct;
+    }
+
+    public StringProperty onChooseProperty()
+    {
+        return onChoose;
+    }
+
     @Override
     public String assemble()
     {
-        return "<answer" + utilitys.correct(correct.get()) + utilitys.onChoose(onChoose.get()) + ">" + this.getAnswer() + "</answer>";
+        return "<answer" + utilitys.correct(correct.get()) + utilitys.onChoose(onChoose.get()) + ">" + answer.get() + "</answer>";
     }
-    
-    @Override
-    public Boolean isComplete()
-    {
-        Boolean isComplete = true;
-        if(this.getAnswer().isEmpty() || correct.isNull().get())
-        {
-            System.out.println("Answer incomplete");
-            isComplete = false;
-        }
-        return isComplete;
-    }
+
+//    @Override
+//    public Boolean isComplete()
+//    {
+//        Boolean isComplete = true;
+//        if (this.getAnswer().isEmpty())
+//        {
+//            isComplete = false;
+//        }
+//        return isComplete;
+//    }
 }

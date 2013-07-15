@@ -15,39 +15,77 @@ public class AudioRecord extends Mission
 {
     private StringProperty task;
     private StringProperty file;
-    
+
     public AudioRecord()
     {
         super("AudioRecord");
-        this.task = new SimpleStringProperty("");
-        this.file = new SimpleStringProperty("");
+        task = new SimpleStringProperty("");
+        file = new SimpleStringProperty("");
+        addNecessaryAndOptionalFields();
     }
-    
+
+    public String getTask()
+    {
+        return task.get();
+    }
+
+    public String getFile()
+    {
+        return file.get();
+    }
+
+    public void setTask(String task)
+    {
+        this.task.set(task);
+    }
+
+    public void setFile(String file)
+    {
+        this.file.set(file);
+    }
+
     public StringProperty taskProperty()
     {
         return task;
     }
-    
+
     public StringProperty fileProperty()
     {
         return file;
     }
-    
-    @Override
-    public String createSpecificMissionHeader()
-    {
-        return utilitys.task(this.task.get()) + utilitys.file(this.file.get());
-    }
+
+//    public String createSpecificMissionHeader()
+//    {
+//        String returnString = utilitys.task(task.get());
+//        if(!file.get().isEmpty())
+//        {
+//            returnString += utilitys.file(file.get());
+//        }
+//        return returnString;
+//    }
 
     @Override
     public String assemble()
     {
-        return createMissionHeader() + createMissionTrailer();
+//        return createMissionHeader() + buildMissionTail();
+        return buildMissionHead() + buildMissionTail();
     }
 
+//    @Override
+//    public Boolean isComplete()
+//    {
+//        Boolean isComplete = true;
+//        if (getId().isEmpty() || task.get().isEmpty())
+//        {
+//            isComplete = false;
+//        }
+//        return isComplete;
+//    }
+
     @Override
-    public Boolean isComplete()
+    protected final void addNecessaryAndOptionalFields()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addNecessaryHeaderFields(getFieldByString("task"));
+        addOptionalHeaderFields(getFieldByString("file"));
     }
 }

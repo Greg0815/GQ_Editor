@@ -4,13 +4,13 @@
  */
 package Mission.Rules.Conditions;
 
-import Main.AssembleInterface;
+import Main.BaseComponent;
 
 /**
  *
  * @author Gregor
  */
-abstract public class Condition implements AssembleInterface
+abstract public class Condition extends BaseComponent
 {
     
     public Condition()

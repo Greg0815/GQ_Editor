@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Gregor
  */
-public class UtilityFunctions<T extends AssembleInterface>
+public class UtilityFunctions<T extends BaseComponent>
 {
     public UtilityFunctions()
     {
@@ -46,6 +46,11 @@ public class UtilityFunctions<T extends AssembleInterface>
     }
     
     public String typeAndValue(String type, Float value)
+    {
+        return " " + type + "=\"" + value.toString() + "\"";
+    }
+    
+    public String typeAndValue(String type, Double value)
     {
         return " " + type + "=\"" + value.toString() + "\"";
     }
@@ -95,7 +100,7 @@ public class UtilityFunctions<T extends AssembleInterface>
         return typeAndValue("state", state);
     }
     
-    public String correct(String correct)
+    public String correct(Boolean correct)
     {
         return typeAndValue("correct", correct);
     }
@@ -165,12 +170,12 @@ public class UtilityFunctions<T extends AssembleInterface>
         return typeAndValue("endbuttontext", endbuttontext);
     }
     
-    public String longitude(Float longitude)
+    public String longitude(Double longitude)
     {
         return typeAndValue("longitude", longitude);
     }
     
-    public String latitude(Float latitude)
+    public String latitude(Double latitude)
     {
         return typeAndValue("latitude", latitude);
     }
@@ -225,7 +230,7 @@ public class UtilityFunctions<T extends AssembleInterface>
         return typeAndValue("if_wrong_image", if_wrong_image);
     }
     
-    public String mode(Boolean mode)
+    public String mode(String mode)
     {
         return typeAndValue("mode", mode);
     }

@@ -4,7 +4,6 @@
  */
 package Mission;
 
-import static Main.AssembleInterface.utilitys;
 import Mission.Components.Answer;
 import java.util.ArrayList;
 import javafx.beans.property.BooleanProperty;
@@ -18,7 +17,6 @@ import javafx.beans.property.StringProperty;
  */
 public class MultipleChoiceQuestion extends Mission
 {
-
     private BooleanProperty loopUntilSuccess;
     private BooleanProperty shuffle;
     private StringProperty questiontext;
@@ -31,14 +29,7 @@ public class MultipleChoiceQuestion extends Mission
         shuffle = new SimpleBooleanProperty(true);
         questiontext = new SimpleStringProperty("");
         answer = new ArrayList<>();
-        addNecessaryField("questiontext", "answer");
-        addCompletenessVariable(questiontext);
-        addCompletenessVariable(answer);
-    }
-
-    public BooleanProperty loopUntilSuccessProperty()
-    {
-        return loopUntilSuccess;
+        addNecessaryAndOptionalFields();
     }
 
     public Boolean getLoopUntilSuccess()
@@ -46,29 +37,9 @@ public class MultipleChoiceQuestion extends Mission
         return loopUntilSuccess.get();
     }
 
-    public void setLoopUntilSuccess(Boolean loopUntilSuccess)
-    {
-        this.loopUntilSuccess.set(loopUntilSuccess);
-    }
-
-    public BooleanProperty shuffleProperty()
-    {
-        return shuffle;
-    }
-
     public Boolean getShuffle()
     {
         return shuffle.get();
-    }
-
-    public void setShuffle(Boolean shuffle)
-    {
-        this.shuffle.set(shuffle);
-    }
-
-    public StringProperty questiontextProperty()
-    {
-        return questiontext;
     }
 
     public String getQuestiontext()
@@ -76,9 +47,34 @@ public class MultipleChoiceQuestion extends Mission
         return questiontext.get();
     }
 
+    public void setLoopUntilSuccess(Boolean loopUntilSuccess)
+    {
+        this.loopUntilSuccess.set(loopUntilSuccess);
+    }
+
+    public void setShuffle(Boolean shuffle)
+    {
+        this.shuffle.set(shuffle);
+    }
+
     public void setQuestiontext(String questiontext)
     {
         this.questiontext.set(questiontext);
+    }
+
+    public BooleanProperty loopUntilSuccessProperty()
+    {
+        return loopUntilSuccess;
+    }
+
+    public BooleanProperty shuffleProperty()
+    {
+        return shuffle;
+    }
+
+    public StringProperty questiontextProperty()
+    {
+        return questiontext;
     }
 
     public Answer addAnswer()
@@ -95,34 +91,59 @@ public class MultipleChoiceQuestion extends Mission
 
     public String assembleQuestionAndAnswer()
     {
-        return "<question><questiontext>" + this.questiontext.get() + "</questiontext>" + utilitys.createStringFromArrayList(this.answer) + "</question>";
+        return "<question><questiontext>" + questiontext.get() + "</questiontext>" + utilitys.createStringFromArrayList(answer) + "</question>";
     }
 
     @Override
     public String assemble()
     {
-        return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + assembleQuestionAndAnswer() + createMissionTrailer();
+//        return createMissionHeader() + assembleQuestionAndAnswer() + buildMissionTail();
+        return buildMissionHead() + assembleQuestionAndAnswer() + buildMissionTail();
     }
 
-    @Override
-    public String createSpecificMissionHeader()
-    {
-        String returnString = "";
-        if(loopUntilSuccess.isBound())
-        {
-            returnString += utilitys.loopUntilSuccess(loopUntilSuccess.get());
-        }
-        if(shuffle.isBound())
-        {
-            returnString += utilitys.shuffle(shuffle.get());
-        }
-        return returnString;
+//    @Override
+//    public String createSpecificMissionHeader()
+//    {
+////        String returnString = "";
+////        if (loopUntilSuccess.get)
+////        {
+////            returnString += utilitys.loopUntilSuccess(loopUntilSuccess.get());
+////        }
+////        if (shuffle.isBound())
+////        {
+////            returnString += utilitys.shuffle(shuffle.get());
+////        }
+////        return returnString;
 //        return utilitys.loopUntilSuccess(loopUntilSuccess.get()) + utilitys.shuffle(shuffle.get());
-    }
+//    }
+
+//    @Override
+//    public Boolean isComplete()
+//    {
+//        Boolean isComplete = true;
+//        if (getId().isEmpty() || questiontext.get().isEmpty())
+//        {
+//            isComplete = false;
+//        }
+//        if (answer.size() < 1)
+//        {
+//            isComplete = false;
+//        }
+//        for (Answer ans : answer)
+//        {
+//            if (!ans.isComplete())
+//            {
+//                isComplete = false;
+//            }
+//        }
+//
+//        return isComplete;
+//    }
 
     @Override
-    public Boolean isComplete()
+    protected final void addNecessaryAndOptionalFields()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addNecessaryNonHeaderFields(getFieldByString("questiontext"), getFieldByString("answer"));
+        addOptionalHeaderFields(getFieldByString("loopUntilSuccess"), getFieldByString("shuffle"));
     }
 }

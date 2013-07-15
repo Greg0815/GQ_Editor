@@ -5,13 +5,14 @@
 package Mission.Rules;
 
 import Main.AssembleInterface;
+import Main.BaseComponent;
 import java.util.ArrayList;
 
 /**
  *
  * @author Gregor
  */
-public class Trigger implements AssembleInterface
+public class Trigger extends BaseComponent
 {
     private String trigger;
     private ArrayList<Rule> rules;
@@ -42,5 +43,11 @@ public class Trigger implements AssembleInterface
     public Boolean isComplete()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected void addNecessaryAndOptionalFields()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

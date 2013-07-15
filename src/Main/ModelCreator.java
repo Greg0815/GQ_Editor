@@ -26,12 +26,13 @@ import java.util.ArrayList;
  */
 public class ModelCreator
 {
-    Description description;
-    Game game;
+    private Description description;
+    private Game game;
 
     public ModelCreator(Description description)
     {
         this.description = description;
+        createModel();
     }
 
 //    public Description getDescription()
@@ -43,7 +44,7 @@ public class ModelCreator
         return game;
     }
 
-    public Game createModel()
+    private void createModel()
     {
         game = new Game();
 
@@ -64,26 +65,6 @@ public class ModelCreator
             }
             game.addContainer(container);
         }
-        /*  Gesamter Inhalt des Blocks wird jetzt in den Containerklassen durch den Konstruktor erledigt
-         * 
-         * 
-         for(Block block : description.getBlocks())
-         {
-         ContainerToBeReplaced containerForBlock;
-         if(block.getMaxMissionCount() == 1)
-         {
-         containerForBlock = new ContainerToBeReplaced(block.getId());
-         }
-         else
-         {
-         containerForBlock = new ContainerToBeReplaced(block.getId(), block.getMaxMissionCount(), block.getInternalConnector());
-         //                containerForBlock.setInternalConnector(block.getInternalConnector());
-         }
-         containerForBlock.addAllowedClasses(block.getgetMissionClasses());
-         game.addContainer(containerForBlock);
-         }
-         */
-        return game;
     }
 
     public void applyDescriptionRules()
@@ -147,6 +128,7 @@ public class ModelCreator
             ActionStartMission startMissionAction = new ActionStartMission(to.getFirstGameElementsGameId());
             rule.addAction(startMissionAction);
             trigger.addRule(rule);
+            System.out.println(from.getId() + "\t" + from.getGameElements().size());
             from.getLastGameElement().addTrigger(trigger);
         }
     }
@@ -180,22 +162,5 @@ public class ModelCreator
                 }
             }
         }
-
-//        for (Block block : description.getBlocks())
-//        {
-//            if (block.getMaxMissionCount() > 1)
-//            {
-//                Container container = getContainerByIdString(block.getId());
-//                ArrayList<GameElement> gameElementz = container.getGameElements();
-//                for (int i = 0; i < gameElementz.size() - 1; i++)
-//                {
-//                    Trigger trigger = container.getInternalConnector();
-//                    Rule rule = new Rule();
-//                    trigger.addRule(rule);
-//                    rule.addAction(new ActionStartMission(gameElementz.get(i + 1).getId()));
-//                    gameElementz.get(i).addTrigger(trigger);
-//                }
-//            }
-//        }
     }
 }

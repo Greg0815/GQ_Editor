@@ -5,7 +5,7 @@
 package Containers;
 
 import Blocks.VariableBlock;
-import Main.GameElement;
+import Main.GameComponent;
 
 /**
  *
@@ -19,15 +19,13 @@ public class VariableContainer extends Container
         super(id, minMissionCount, maxMissionCount, internalConnector);
     }
     
-    // TODO übrigen Constuctoren hinzufügen
-    
     public VariableContainer(VariableBlock variableBlock)
     {
         super(variableBlock.getId(), variableBlock.getMinMissionCount(), variableBlock.getMaxMissionCount(), variableBlock.getInternalConnector());
         this.addAllowedClasses(variableBlock.getMissionTypes());
     }
     
-    public void deleteGameElement(GameElement gameElement)
+    public void deleteGameElement(GameComponent gameElement)
     {
         this.getGameElements().remove(gameElement);
     }
@@ -50,8 +48,23 @@ public class VariableContainer extends Container
     @Override
     public Boolean isComplete()
     {
-        // TODO implement
-        return true;
+        Boolean isComplete = true;
+        for(GameComponent gameComponent : this.getGameElements())
+        {
+            if(!gameComponent.isComplete())
+            {
+                System.out.println("GameComponent incomplete: " + gameComponent.getId());
+                isComplete = false;
+                break;
+            }
+        }
+        return isComplete;
+    }
+
+    @Override
+    protected void addNecessaryAndOptionalFields()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

@@ -4,7 +4,6 @@
  */
 package Blocks;
 
-import Main.AssembleInterface.DISPLAYABLE;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.util.Pair;
@@ -20,7 +19,6 @@ public class Description
     private ArrayList<Block> blocks;
     private ArrayList<BlockConnector> connectors;
     private ArrayList<Pair> defaults;       // TODO default-werte
-    private ArrayList<DISPLAYABLE> displayableFields;     // TODO anzuzeigende felder
 
     public Description(String gameDescription)
     {
@@ -28,7 +26,6 @@ public class Description
         blocks = new ArrayList<>();
         connectors = new ArrayList<>();
         defaults = new ArrayList<>();
-        displayableFields = new ArrayList<>();
     }
 
     public String getGameDescription()
@@ -39,16 +36,6 @@ public class Description
     public ArrayList<Pair> getDefaults()
     {
         return defaults;
-    }
-
-    public ArrayList<DISPLAYABLE> getDisplayableFields()
-    {
-        return displayableFields;
-    }
-
-    public void addDisplayableFields(DISPLAYABLE... displayableFields)         // evtl check for duplicates
-    {
-        this.displayableFields.addAll(Arrays.asList(displayableFields));
     }
 
     public void addDefaults(Pair... defaults)         // evtl check for duplicates

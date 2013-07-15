@@ -31,8 +31,69 @@ public class NPCTalk extends Mission
         textsize = new SimpleStringProperty("");
         cancel = new SimpleStringProperty("");
         dialogitem = new ArrayList<>();
-        this.addNecessaryField("dialogitem");
-        this.addCompletenessVariable(dialogitem);
+        addNecessaryAndOptionalFields();
+    }
+
+    public String getImage()
+    {
+        return image.get();
+    }
+
+    public String getNextdialogbuttontext()
+    {
+        return nextdialogbuttontext.get();
+    }
+
+    public String getEndbuttontext()
+    {
+        return endbuttontext.get();
+    }
+
+    public String getTextsize()
+    {
+        return textsize.get();
+    }
+
+    public String getCancel()
+    {
+        return cancel.get();
+    }
+
+    public void setImage(String image)
+    {
+        this.image.set(image);
+    }
+
+    public void setNextdialogbuttontext(String nextdialogbuttontext)
+    {
+        this.nextdialogbuttontext.set(nextdialogbuttontext);
+    }
+
+    public void setEndbuttontext(String endbuttontext)
+    {
+        this.endbuttontext.set(endbuttontext);
+    }
+
+    public void setTextsize(String textsize)
+    {
+        this.textsize.set(textsize);
+    }
+
+    public void setCancel(String cancel)
+    {
+        this.cancel.set(cancel);
+    }
+
+    public void addDialogitem(Dialogitem dialogitem)
+    {
+        this.dialogitem.add(dialogitem);
+    }
+
+    public Dialogitem addDialogitem()
+    {
+        Dialogitem newDialogitem = new Dialogitem();
+        dialogitem.add(newDialogitem);
+        return newDialogitem;
     }
 
     public StringProperty imageProperty()
@@ -60,43 +121,18 @@ public class NPCTalk extends Mission
         return cancel;
     }
 
-    public String getCancel()
-    {
-        return cancel.get();
-    }
-
-    public void setCancel(String cancel)
-    {
-        this.cancel.set(cancel);
-    }
-
-    public void addDialogitem(Dialogitem dialogitem)
-    {
-        this.dialogitem.add(dialogitem);
-    }
-
-    public Dialogitem addDialogitem()
-    {
-        Dialogitem newDialogitem = new Dialogitem();
-        dialogitem.add(newDialogitem);
-        return newDialogitem;
-    }
-
-    @Override
-    public String createSpecificMissionHeader()
-    {
-        return utilitys.image(image.get()) + utilitys.nextdialogbuttontext(nextdialogbuttontext.get()) + utilitys.endbuttontext(endbuttontext.get()) + utilitys.textsize(textsize.get()) + utilitys.cancel(cancel.get());
-    }
-
     @Override
     public String assemble()
     {
-        return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + utilitys.createStringFromArrayList(dialogitem) + createMissionTrailer();
+        return buildMissionHead() + utilitys.createStringFromArrayList(dialogitem) + buildMissionTail();
+//        return createMissionHeader() + utilitys.createStringFromArrayList(dialogitem) + buildMissionTail();
     }
 
+
     @Override
-    public Boolean isComplete()
+    protected void addNecessaryAndOptionalFields()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        addNecessaryNonHeaderFields(getFieldByString("dialogitem"));
+        addOptionalHeaderFields(getFieldByString("image"), getFieldByString("nextdialogbuttontext"), getFieldByString("endbuttontext"), getFieldByString("textsize"), getFieldByString("cancel"));
     }
 }

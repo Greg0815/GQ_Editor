@@ -11,9 +11,8 @@ import javafx.beans.property.StringProperty;
  *
  * @author Gregor
  */
-public class Simpleanswer extends MissionComponent implements Main.AssembleInterface
+public class Simpleanswer extends MissionComponent
 {
-
     private StringProperty answer;
 //    private ArrayList<String> necessaryFields;
 
@@ -22,7 +21,7 @@ public class Simpleanswer extends MissionComponent implements Main.AssembleInter
         super();
         answer = new SimpleStringProperty("");
 //        this.necessaryFields = new ArrayList<>();
-        this.addNecessaryFields("answer");
+        addNecessaryAndOptionalFields();
     }
 
     public Simpleanswer(String answer)
@@ -30,7 +29,13 @@ public class Simpleanswer extends MissionComponent implements Main.AssembleInter
         super();
         this.answer = new SimpleStringProperty(answer);
 //        this.necessaryFields = new ArrayList<>();
-        this.addNecessaryFields("answer");
+        addNecessaryAndOptionalFields();
+    }
+
+    @Override
+    protected final void addNecessaryAndOptionalFields()
+    {
+        addNecessaryNonHeaderFields(getFieldByString("answer"));
     }
 
 //    public ArrayList<String> getNecessaryFields()
@@ -42,12 +47,6 @@ public class Simpleanswer extends MissionComponent implements Main.AssembleInter
 //    {
 //        necessaryFields.addAll(Arrays.asList(fields));
 //    }
-
-    public StringProperty answerProperty()
-    {
-        return answer;
-    }
-
     public String getAnswer()
     {
         return answer.get();
@@ -58,21 +57,25 @@ public class Simpleanswer extends MissionComponent implements Main.AssembleInter
         this.answer.set(answer);
     }
 
+    public StringProperty answerProperty()
+    {
+        return answer;
+    }
+
     @Override
     public String assemble()
     {
         return "<answer>" + answerProperty().get() + "</answer>";
     }
-
-    @Override
-    public Boolean isComplete()
-    {
-        Boolean isComplete = true;
-        if(answer.isNull().get())
-        {
-            System.out.println("Simpleanswer incomplete");
-            isComplete = false;
-        }
-        return isComplete;
-    }
+//    @Override
+//    public Boolean isComplete()
+//    {
+//        Boolean isComplete = true;
+//        if(answer.isNull().get())
+//        {
+//            System.out.println("Simpleanswer incomplete");
+//            isComplete = false;
+//        }
+//        return isComplete;
+//    }
 }

@@ -17,7 +17,6 @@ import javafx.beans.property.StringProperty;
  */
 public class TextQuestion extends Mission
 {
-
     private StringProperty question;
     private BooleanProperty loopUntilSuccess;
     private StringProperty prompt;
@@ -34,9 +33,7 @@ public class TextQuestion extends Mission
         this.replyOnCorrect = new SimpleStringProperty("");
         this.replyOnWrong = new SimpleStringProperty("");
         this.simpleanswer = new ArrayList<>();
-        this.addNecessaryField("question", "simpleanswer");
-        this.addCompletenessVariable(question);
-        this.addCompletenessVariable(simpleanswer);
+        addNecessaryAndOptionalFields();
     }
 
     public Simpleanswer addSimpleanswer()
@@ -45,7 +42,7 @@ public class TextQuestion extends Mission
         simpleanswer.add(newSimpleAnswer);
         return newSimpleAnswer;
     }
-    
+
     public void addSimpleanswer(Simpleanswer answer)
     {
         simpleanswer.add(answer);
@@ -86,21 +83,33 @@ public class TextQuestion extends Mission
         return replyOnWrong;
     }
 
-    @Override
-    public String createSpecificMissionHeader()
+//    @Override
+//    public String createSpecificMissionHeader()
+//    {
+//        return utilitys.question(question.get()) + utilitys.loopUntilSuccess(loopUntilSuccess.get()) + utilitys.prompt(prompt.get()) + utilitys.replyOnCorrect(replyOnCorrect.get()) + utilitys.replyOnWrong(replyOnWrong.get());
+//    }
+    public String assembleAnswers()
     {
-        return utilitys.question(question.get()) + utilitys.loopUntilSuccess(loopUntilSuccess.get()) + utilitys.prompt(prompt.get()) + utilitys.replyOnCorrect(replyOnCorrect.get()) + utilitys.replyOnWrong(replyOnWrong.get());
+        return "<answers>" + utilitys.createStringFromArrayList(simpleanswer) + "</answers>";
     }
 
     @Override
     public String assemble()
     {
-        return createMissionHeader() + "<answers>" + utilitys.createStringFromArrayList(simpleanswer) + "</answers>" + createMissionTrailer();
+//        return createMissionHeader() + "<answers>" + utilitys.createStringFromArrayList(simpleanswer) + "</answers>" + buildMissionTail();
+        return buildMissionHead() + assembleAnswers() + buildMissionTail();
     }
 
+//    @Override
+//    public Boolean isComplete()
+//    {
+//        Boolean isComplete = true;
+//        return isComplete;
+//    }
     @Override
-    public Boolean isComplete()
+    protected final void addNecessaryAndOptionalFields()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.addNecessaryNonHeaderFields(getFieldByString("question"), getFieldByString("simpleanswer"));
+        this.addOptionalHeaderFields(getFieldByString("loopUntilSuccess"), getFieldByString("prompt"), getFieldByString("replyOnCorrect"), getFieldByString("replyOnWrong"));
     }
 }

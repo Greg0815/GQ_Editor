@@ -28,5 +28,11 @@ public class LinearQuantityContainer extends Container
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    protected void addNecessaryAndOptionalFields()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }

@@ -27,7 +27,7 @@ public class Game implements AssembleInterface
         necessaryFields = new ArrayList<>();
         necessaryFields.add("id");
     }
-    
+
     public ArrayList<String> getNecessaryFields()
     {
         return necessaryFields;
@@ -37,23 +37,27 @@ public class Game implements AssembleInterface
     {
         this.necessaryFields.addAll(Arrays.asList(necessaryFields));
     }
-    
+
     @Override
     public Boolean isComplete()
     {
         Boolean isComplete = true;
-        for (Container container : containers)
+        if (id.get().isEmpty())
         {
-            if (!container.isComplete())
-            {
-                System.out.println("Container incomplete");
-                isComplete = false;
-            }
-        }
-        if (id.isNull().get())
-        {
-            System.out.println("Game ID Null");
+            System.out.println("Game ID is missing");
             isComplete = false;
+        }
+        else
+        {
+            for (Container container : containers)
+            {
+                if (!container.isComplete())
+                {
+                    System.out.println("Container incomplete: " + container.getId());
+                    isComplete = false;
+                    break;
+                }
+            }
         }
         return isComplete;
     }

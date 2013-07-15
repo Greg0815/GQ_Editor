@@ -4,8 +4,8 @@
  */
 package Containers;
 
-import Main.AssembleInterface;
-import Main.GameElement;
+import Main.BaseComponent;
+import Main.GameComponent;
 import Mission.Rules.Actions.Action;
 import Mission.Rules.Trigger;
 import java.util.ArrayList;
@@ -14,15 +14,15 @@ import java.util.ArrayList;
  *
  * @author Gregor
  */
-public abstract class Container implements AssembleInterface
+public abstract class Container extends BaseComponent
 {
     private String id;
     private int minMissionCount;
     private int maxMissionCount;
-    private ArrayList<GameElement> gameElements;
+    private ArrayList<GameComponent> gameComponents;
     private ArrayList<Class> allowedClasses;
     private String internalConnector;
-    private ArrayList<Action> onSuccessActions;
+    private ArrayList<Action> onSuccessActions;     // TODO container onTrigger ArrayList verarbeitung
     private ArrayList<Action> onFailActions;
     private ArrayList<Action> onBeginActions;
     private ArrayList<Action> onEndActions;
@@ -35,7 +35,7 @@ public abstract class Container implements AssembleInterface
         this.minMissionCount = minMissionCount;
         this.maxMissionCount = maxMissionCount;
         this.internalConnector = internalConnector;
-        gameElements = new ArrayList<>();
+        gameComponents = new ArrayList<>();
         allowedClasses = new ArrayList<>();
         onSuccessActions = new ArrayList<>();
         onFailActions = new ArrayList<>();
@@ -45,9 +45,9 @@ public abstract class Container implements AssembleInterface
         onLeaveActions = new ArrayList<>();
     }
     
-    public ArrayList<GameElement> getGameElements()
+    public ArrayList<GameComponent> getGameElements()
     {
-        return gameElements;
+        return gameComponents;
     }
     
     public Trigger getInternalConnector()
@@ -55,12 +55,12 @@ public abstract class Container implements AssembleInterface
         return new Trigger(internalConnector);
     }
     
-    public GameElement makeNewGameElementByClass(Class classToInstantiate)
+    public GameComponent makeNewGameElementByClass(Class classToInstantiate)
     {
-        if (gameElements.size() < maxMissionCount) {
+        if (gameComponents.size() < maxMissionCount) {
             try {
-                GameElement gameElement = (GameElement) classToInstantiate.newInstance();
-                gameElements.add(gameElement);
+                GameComponent gameElement = (GameComponent) classToInstantiate.newInstance();
+                gameComponents.add(gameElement);
                 return gameElement;
             }
             catch (InstantiationException | IllegalAccessException ex) {
@@ -80,10 +80,10 @@ public abstract class Container implements AssembleInterface
         return id;
     }
 
-    public void addGameElement(GameElement gameElement)
+    public void addGameElement(GameComponent gameElement)
     {
-        if (gameElements.size() < maxMissionCount) {
-            gameElements.add(gameElement);
+        if (gameComponents.size() < maxMissionCount) {
+            gameComponents.add(gameElement);
         }
     }
     
@@ -95,7 +95,7 @@ public abstract class Container implements AssembleInterface
 
     public void applyTriggerToAllGameElements(Trigger trigger)
     {
-        for(GameElement gameElement : gameElements)
+        for(GameComponent gameElement : gameComponents)
         {
             gameElement.addTrigger(trigger);
         }
@@ -113,12 +113,12 @@ public abstract class Container implements AssembleInterface
     
     public String getFirstGameElementsGameId()
     {
-        return gameElements.get(0).getId();
+        return gameComponents.get(0).getId();
     }
     
-    public GameElement getLastGameElement()
+    public GameComponent getLastGameElement()
     {
-        return gameElements.get(gameElements.size()-1);
+        return gameComponents.get(gameComponents.size()-1);
     }
 }
 

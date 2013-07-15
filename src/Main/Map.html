@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GeoQuest Map View</title>
+        <meta charset="utf-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.ie.css" />
+        <![endif]-->
+
+        <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
+        <script type="text/javascript" src="mootools-core-1.4.5-full-compat.js"></script>
+    </head>
+    <body>
+        <div id="map" style="width: 800px; height: 600px"></div>
+
+        <script>
+            function Hotspot(lat, lng, id, radius, initialVisibility)
+            {
+                this.latitude = lat;
+                this.longitude = lng;
+                this.id = id;
+                this.radius = (typeof radius === "undefined") ? 15 : radius;
+                this.initialVisibility = (typeof initialVisibility === "undefined") ? true : initialVisibility;
+            }
+            //            function Hotspot(latLng, id)
+            //            {
+            //                this.longitude = latLng.lng;
+            //                this.latitude = latLng.lat;
+            //                this.id = id;
+            //            }
+            //            function Hotspot(lng, lat)
+            //            {
+            //                this.longitude = lng;
+            //                this.latitude = lat;
+            //                this.id = "";
+            //            }
+            //            function Hotspot(latLng)
+            //            {
+            //                this.longitude = latLng.lng;
+            //                this.latitude = latLng.lat;
+            //                this.id = "";
+            //            }
+            var tmp;
+            var url = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png';
+            var attribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';
+            var hotspots = new Array();
+            var map = L.map('map', {
+                center: [51.065, 7.0224],
+                zoom: 13,
+                closePopupOnClick: true
+            });
+            var baseLayer = L.tileLayer(url, {
+                maxZoom: 16,
+                attribution: attribution
+            }).addTo(map);
+            var markers = new L.LayerGroup().addTo(map);
+            var ids = new Array();
+            
+            function remove(array, value)
+            {
+                var index = array.indexOf(value, 0);
+                array.splice(index, 1);
+            }
+            
+            function findHotspotById(idString)
+            {
+                for(i=0; i<hotspots.length; i++)
+                {
+                    if(idString == hotspots[i].id)
+                    {
+                        return hotspots[i];
+                    }
+                }
+            }
+            
+            function destroyProcess(missionId, newMarker)
+            {
+                console.log("check 2");
+                var hotspotToBeDeleted = findHotspotById(missionId);
+                console.log(hotspotToBeDeleted);
+                remove(hotspots, hotspotToBeDeleted);
+                console.log("#hotspots: " + hotspots.length);
+                ids.push(missionId);
+                markers.removeLayer(newMarker);
+            }
+            
+            function popupContentSelectionFixed(savedId, newMarker)
+            {
+                var div;
+                var textNode;
+                var deleteHotspotButton;
+                var deleteHotspotButtonText;
+
+                div = document.createElement('div');
+                textNode = document.createTextNode(savedId);
+                deleteHotspotButton = document.createElement('button');
+                deleteHotspotButtonText = document.createTextNode('Delete Hotspot');
+                
+                deleteHotspotButton.appendChild(deleteHotspotButtonText);
+                div.appendChild(textNode);
+                div.appendChild(deleteHotspotButton);
+                
+                deleteHotspotButton.onclick = function()
+                {
+                    console.log("check 1");
+                    destroyProcess(savedId, newMarker);
+                };
+                return div;
+            }
+
+            function saveProcess(select, newMarker)
+            {
+                var missionId = select.options[select.selectedIndex].text;
+                if(missionId !== null)
+                {
+                    var hotspot = new Hotspot(newMarker.getLatLng().lat, newMarker.getLatLng().lng, missionId);
+                    hotspots.push(hotspot);
+                    console.log(hotspots.length);
+                    remove(ids, missionId);
+                    console.log(ids);
+                    newMarker.setPopupContent(popupContentSelectionFixed(missionId, newMarker)).openPopup();
+                    newMarker.on('click', function()
+                    {
+                        newMarker.setPopupContent(popupContentSelectionFixed(missionId, newMarker));
+                    });
+                }
+            }
+            
+            function popupContentSelectionChoosable(newMarker)
+            {
+                var div;
+                var select;
+                var saveButton;
+                var saveButtonText;
+                var deleteButton;
+                var deleteButtonText;
+                div = document.createElement('div');
+                select = document.createElement('select');
+                saveButton = document.createElement('button');
+                saveButtonText = document.createTextNode('Save Selection');
+                deleteButton = document.createElement('button');
+                deleteButtonText = document.createTextNode('Delete Hotspot');
+                for(i=0; i<ids.length; i++)
+                {
+                    var option = document.createElement('option');
+                    var optionText = document.createTextNode(ids[i]);
+
+                    option.setAttribute('value', ids[i]);
+                    option.appendChild(optionText);
+                    select.appendChild(option);
+                }
+                select.setAttribute('id', 'selection');
+                
+                saveButton.appendChild(saveButtonText);
+                saveButton.onclick = function()
+                {
+                    saveProcess(select, newMarker);
+                };
+                
+                deleteButton.appendChild(deleteButtonText);
+                deleteButton.onclick = function()
+                {
+                    markers.removeLayer(newMarker);
+                }
+
+                div.appendChild(select);
+                div.appendChild(saveButton);
+                div.appendChild(deleteButton);
+                return div;
+            }
+                
+            function makeMapByIds(idsList)      // Globale Verteilungsfunktion 1
+            {
+                //                console.log(idsList.size);
+//                for(i=0; i<idsList.length; i++)
+//                {
+//                    ids.push(idsList.pop());
+//                }
+                //                ids = idsList;
+                //                var maxHotspots = ids.length;
+                
+                //                function saveProcess(select, newMarker)
+                //                {
+                //                    var missionId = select.options[select.selectedIndex].text;
+                //                    var hotspot = new Hotspot(newMarker.getLatLng().lat, newMarker.getLatLng().lng, missionId);
+                //                    hotspots.push(hotspot);
+                //                    remove(ids, missionId);
+                //
+                //                    newMarker.setPopupContent(popupContentSelectionFixed(missionId, newMarker)).openPopup();
+                //                    newMarker.on('click', function()
+                //                    {
+                //                        newMarker.setPopupContent(popupContentSelectionFixed(missionId, newMarker));
+                //                    });
+                //                }
+                
+                //                function popupContentSelectionChoosable(newMarker)
+                //                {
+                //                    var div;
+                //                    var select;
+                //                    var saveButton;
+                //                    var saveButtonText;
+                //                    var deleteButton;
+                //                    var deleteButtonText;
+                //                    div = document.createElement('div');
+                //                    select = document.createElement('select');
+                //                    saveButton = document.createElement('button');
+                //                    saveButtonText = document.createTextNode('Save Selection');
+                //                    deleteButton = document.createElement('button');
+                //                    deleteButtonText = document.createTextNode('Delete Hotspot');
+                //                    for(i=0; i<ids.length; i++)
+                //                    {
+                //                        var option = document.createElement('option');
+                //                        var optionText = document.createTextNode(ids[i]);
+                //
+                //                        option.setAttribute('value', ids[i]);
+                //                        option.appendChild(optionText);
+                //                        select.appendChild(option);
+                //                    }
+                //                    select.setAttribute('id', 'selection');
+                //                
+                //                    saveButton.appendChild(saveButtonText);
+                //                    saveButton.onclick = function()
+                //                    {
+                //                        saveProcess(select, newMarker);
+                //                    };
+                //                
+                //                    deleteButton.appendChild(deleteButtonText);
+                //                    deleteButton.onclick = function()
+                //                    {
+                //                        markers.removeLayer(newMarker);
+                //                    }
+                //
+                //                    div.appendChild(select);
+                //                    div.appendChild(saveButton);
+                //                    div.appendChild(deleteButton);
+                //                    return div;
+                //                }
+                
+                //                function onMapClick(e)
+                //                {
+                //                    if(markers.getLayers().length < maxHotspots)
+                //                    {
+                //                        var newPopup = new L.Popup();
+                //                        var newMarker = new L.Marker(e.latlng).bindPopup(newPopup).addTo(markers).openPopup();
+                //                        newMarker.setPopupContent(popupContentSelectionChoosable(newMarker));
+                //                        newMarker.on('click', function()
+                //                        {
+                //                            newMarker.setPopupContent(popupContentSelectionChoosable(newMarker));
+                //                        });
+                //                    }
+                //                }
+                //                map.on('click', onMapClick);
+            }
+            
+            function makeMapByHotspots()        // Globale Verteilungsfunktion 2
+            {
+                    for(i=0; i<hotspots.length; i++)
+                    {
+                        var lat = hotspots[i].latitude;
+                        var lng = hotspots[i].longitude;
+                        var id = hotspots[i].id;
+                        
+                        var popup = new L.Popup();
+                        var marker = new L.Marker(new L.LatLng(lat, lng)).bindPopup(popup).addTo(markers);
+                        popup.setContent(popupContentSelectionFixed(id, marker));
+                    }
+                
+                //                var ids = new Array("mission1", "mission2", "mission3");
+                //                
+                //                var maxHotspots = ids.length;
+            
+                //                function destroyProcess(missionId, newMarker)
+                //                {
+                //                    var hotspotToBeDeleted = findHotspotById(missionId);
+                //                    remove(hotspots, hotspotToBeDeleted);
+                //                    ids.push(missionId);
+                //                    markers.removeLayer(newMarker);
+                //                }
+            
+                //                function popupContentSelectionFixed(savedId, newMarker)
+                //                {
+                //                    var div;
+                //                    var textNode;
+                //                    var deleteHotspotButton;
+                //                    var deleteHotspotButtonText;
+                //
+                //                    div = document.createElement('div');
+                //                    textNode = document.createTextNode(savedId);
+                //                    deleteHotspotButton = document.createElement('button');
+                //                    deleteHotspotButtonText = document.createTextNode('Delete Hotspot');
+                //                
+                //                    deleteHotspotButton.appendChild(deleteHotspotButtonText);
+                //                    div.appendChild(textNode);
+                //                    div.appendChild(deleteHotspotButton);
+                //                
+                //                    deleteHotspotButton.onclick = function()
+                //                    {
+                //                        destroyProcess(savedId, newMarker);
+                //                    };
+                //                    return div;
+                //                }
+            
+                //                function saveProcess(select, newMarker)
+                //                {
+                //                    var missionId = select.options[select.selectedIndex].text;
+                //                    var hotspot = new Hotspot(newMarker.getLatLng(), missionId);
+                //                    hotspots.push(hotspot);
+                //                    remove(ids, missionId);
+                //
+                //                    newMarker.setPopupContent(popupContentSelectionFixed(missionId, newMarker)).openPopup();
+                //                    newMarker.on('click', function()
+                //                    {
+                //                        newMarker.setPopupContent(popupContentSelectionFixed(missionId, newMarker));
+                //                    });
+                //                }
+            
+                //                function popupContentSelectionChoosable(newMarker)
+                //                {
+                //                    var div;
+                //                    var select;
+                //                    var saveButton;
+                //                    var saveButtonText;
+                //                    var deleteButton;
+                //                    var deleteButtonText;
+                //                    div = document.createElement('div');
+                //                    select = document.createElement('select');
+                //                    saveButton = document.createElement('button');
+                //                    saveButtonText = document.createTextNode('Save Selection');
+                //                    deleteButton = document.createElement('button');
+                //                    deleteButtonText = document.createTextNode('Delete Hotspot');
+                //                    for(i=0; i<ids.length; i++)
+                //                    {
+                //                        var option = document.createElement('option');
+                //                        var optionText = document.createTextNode(ids[i]);
+                //
+                //                        option.setAttribute('value', ids[i]);
+                //                        option.appendChild(optionText);
+                //                        select.appendChild(option);
+                //                    }
+                //                    select.setAttribute('id', 'selection');
+                //                
+                //                    saveButton.appendChild(saveButtonText);
+                //                    saveButton.onclick = function()
+                //                    {
+                //                        saveProcess(select, newMarker);
+                //                    };
+                //                
+                //                    deleteButton.appendChild(deleteButtonText);
+                //                    deleteButton.onclick = function()
+                //                    {
+                //                        markers.removeLayer(newMarker);
+                //                    }
+                //
+                //                    div.appendChild(select);
+                //                    div.appendChild(saveButton);
+                //                    div.appendChild(deleteButton);
+                //                    return div;
+                //                }
+            }
+            
+            function onMapClick(e)
+            {
+                //                if(markers.getLayers().length < maxHotspots)
+                //                {
+                var newPopup = new L.Popup();
+                var newMarker = new L.Marker(e.latlng).bindPopup(newPopup).addTo(markers).openPopup();
+                newMarker.setPopupContent(popupContentSelectionChoosable(newMarker));
+                newMarker.on('click', function()
+                {
+                    newMarker.setPopupContent(popupContentSelectionChoosable(newMarker));
+                });
+                //                }
+            }
+            map.on('click', onMapClick);
+        </script>
+    </body>
+</html>

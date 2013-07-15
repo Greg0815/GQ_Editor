@@ -4,14 +4,12 @@
  */
 package Mission.Components;
 
-import Main.AssembleInterface;
-import static Main.AssembleInterface.utilitys;
-import Main.GameElement;
+import Main.GameComponent;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.FloatProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -20,39 +18,95 @@ import javafx.beans.property.StringProperty;
  *
  * @author Admin
  */
-public class Hotspot extends GameElement implements AssembleInterface
+public class Hotspot extends GameComponent
 {
-    FloatProperty latitude;
-    FloatProperty longitude;
-    IntegerProperty radius;
-    StringProperty img;
-    BooleanProperty initialVisibility;
-    
+    private DoubleProperty latitude;
+    private DoubleProperty longitude;
+    private IntegerProperty radius;
+    private StringProperty img;
+    private BooleanProperty initialVisibility;
+
     public Hotspot()
     {
         super();
-        this.initialVisibility = new SimpleBooleanProperty(true);
-        this.img = new SimpleStringProperty("");
-        this.latitude = new SimpleFloatProperty(0f);
-        this.longitude = new SimpleFloatProperty(0f);
-        this.radius = new SimpleIntegerProperty(10);
+        initialVisibility = new SimpleBooleanProperty(true);
+        img = new SimpleStringProperty("");
+        latitude = new SimpleDoubleProperty(0.0);
+        longitude = new SimpleDoubleProperty(0.0);
+        radius = new SimpleIntegerProperty(15);
     }
-    
-    public FloatProperty latitudeProperty()
+
+    @Override
+    protected final void addNecessaryAndOptionalFields()
+    {
+        addNecessaryHeaderFields(getFieldByString("longitude"), getFieldByString("latitude"), getFieldByString("radius"));
+    }
+
+    public Double getLatitude()
+    {
+        return latitude.get();
+    }
+
+    public Double getLongitude()
+    {
+        return longitude.get();
+    }
+
+    public Integer getRadius()
+    {
+        return radius.get();
+    }
+
+    public String getImg()
+    {
+        return img.get();
+    }
+
+    public Boolean getInitialVisibility()
+    {
+        return initialVisibility.get();
+    }
+
+    public void setLatitude(Double latitude)
+    {
+        this.latitude.set(latitude);
+    }
+
+    public void setLongitude(Double longitude)
+    {
+        this.longitude.set(longitude);
+    }
+
+    public void setRadius(Integer radius)
+    {
+        this.radius.set(radius);
+    }
+
+    public void setImg(String img)
+    {
+        this.img.set(img);
+    }
+
+    public void setInitialVisibility(Boolean initialVisibility)
+    {
+        this.initialVisibility.set(initialVisibility);
+    }
+
+    public DoubleProperty latitudeProperty()
     {
         return latitude;
     }
-    
-    public FloatProperty longitudeProperty()
+
+    public DoubleProperty longitudeProperty()
     {
         return longitude;
     }
-    
+
     public IntegerProperty radiusProperty()
     {
         return radius;
     }
-    
+
     public StringProperty imgProperty()
     {
         return img;
@@ -62,22 +116,10 @@ public class Hotspot extends GameElement implements AssembleInterface
     {
         return initialVisibility;
     }
-    
+
     @Override
     public String assemble()
     {
-        return "<hotspot " + utilitys.id(this.getId()) + utilitys.latitude(this.latitude.get()) + utilitys.longitude(this.longitude.get()) + utilitys.radius(this.radius.get()) + utilitys.img(this.img.get()) + utilitys.initialVisibility(this.initialVisibility.get()) + ">" + utilitys.createStringFromArrayList(this.getTriggers()) + "</hotspot>";
+        return "<hotspot " + utilitys.id(getId()) + utilitys.latitude(latitude.get()) + utilitys.longitude(longitude.get()) + utilitys.radius(radius.get()) + utilitys.img(img.get()) + utilitys.initialVisibility(initialVisibility.get()) + ">" + utilitys.createStringFromArrayList(getTrigger()) + "</hotspot>";
     }
-
-    @Override
-    public Boolean isComplete()
-    {
-        Boolean isComplete = true;
-        if(latitude == null || longitude == null)       // TODO: bessere lösung
-        {
-            isComplete = false;
-        }
-        return isComplete;
-    }
-    
 }

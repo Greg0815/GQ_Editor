@@ -25,17 +25,7 @@ public class StartAndExitScreen extends Mission
         image = new SimpleStringProperty("");
         duration = new SimpleIntegerProperty(5000);
         cancel = new SimpleStringProperty("");
-        addNecessaryField("image");
-        this.addCompletenessVariable(image);
-    }
-    
-    public StringProperty imageProperty()
-    {
-//        if(this.image == null)
-//        {
-//            this.image = new SimpleStringProperty();
-//        }
-        return image;
+        addNecessaryAndOptionalFields();
     }
     
     public String getImage()
@@ -43,37 +33,9 @@ public class StartAndExitScreen extends Mission
         return image.get();
     }
     
-    public void setImage(String image)
-    {
-        this.image.set(image);
-    }
-    
-    public IntegerProperty durationProperty()
-    {
-//        if(this.duration == null)
-//        {
-//            this.duration = new SimpleIntegerProperty();
-//        }
-        return duration;
-    }
-    
     public Integer getDuration()
     {
         return duration.get();
-    }
-    
-    public void setDuration(Integer duration)
-    {
-        this.duration.set(duration);
-    }
-    
-    public StringProperty cancelProperty()
-    {
-//        if(this.cancel == null)
-//        {
-//            this.cancel = new SimpleStringProperty();
-//        }
-        return cancel;
     }
     
     public String getCancel()
@@ -81,27 +43,61 @@ public class StartAndExitScreen extends Mission
         return cancel.get();
     }
     
+    public void setImage(String image)
+    {
+        this.image.set(image);
+    }
+    
+    public void setDuration(Integer duration)
+    {
+        this.duration.set(duration);
+    }
+    
     public void setCancel(String cancel)
     {
         this.cancel.set(cancel);
     }
 
-    @Override
-    public String createSpecificMissionHeader()
+    public StringProperty imageProperty()
     {
-        return utilitys.image(this.image.get()) + utilitys.duration(this.duration.get()) + utilitys.cancel(this.cancel.get());
+        return image;
     }
+    
+    public IntegerProperty durationProperty()
+    {
+        return duration;
+    }
+    
+    public StringProperty cancelProperty()
+    {
+        return cancel;
+    }
+    
+//    @Override
+//    public String createSpecificMissionHeader()
+//    {
+//        return utilitys.image(this.image.get()) + utilitys.duration(this.duration.get()) + utilitys.cancel(this.cancel.get());
+//    }
 
     @Override
     public String assemble()
     {
-        return createMissionHeader() + utilitys.createStringFromArrayList(this.getTriggers()) + createMissionTrailer();
+        return buildMissionHead() + buildMissionTail();
+//        return createMissionHeader() + utilitys.createStringFromArrayList(this.getTrigger()) + buildMissionTail();
     }
 
+//    @Override
+//    public Boolean isComplete()
+//    {
+//        Boolean isComplete = true;
+//        return isComplete;
+//    }
+    
     @Override
-    public Boolean isComplete()
+    protected final void addNecessaryAndOptionalFields()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.addNecessaryHeaderFields(getFieldByString("image"));
+        this.addOptionalHeaderFields(getFieldByString("duration"), getFieldByString("cancel"));
     }
     
 }

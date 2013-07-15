@@ -4,13 +4,13 @@
  */
 package Mission.Rules.Actions;
 
-import Main.AssembleInterface;
+import Main.BaseComponent;
 
 /**
  *
  * @author Gregor
  */
-public abstract class Action implements AssembleInterface
+public abstract class Action  extends BaseComponent
 {
     private String type;
     

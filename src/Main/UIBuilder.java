@@ -8,6 +8,7 @@ import Containers.Container;
 import Containers.Game;
 import Containers.LinearContainer;
 import Containers.VariableContainer;
+import CustomInputNodes.FileBrowser;
 import CustomInputNodes.NumericTextField;
 import Mission.Components.MissionComponent;
 import Mission.Mission;
@@ -16,8 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
@@ -30,9 +29,6 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseButton;
@@ -48,54 +44,36 @@ import javafx.util.converter.NumberStringConverter;
 public class UIBuilder
 {
     private Game game;
-//    private VBox layoutContainer;
+    private ArrayList<Node> invisibleNodes;
+    private Boolean allNodesVisible = false;
 
     public UIBuilder(Game gameObjectForUIBuildingProcess)
     {
         game = gameObjectForUIBuildingProcess;
-//        layoutContainer = new VBox();
+        invisibleNodes = new ArrayList<>();
     }
-//    public Node parseObject()
-//    {
-//        Node additionalNode = null;
-//        if (objectUIHasToBeBuild instanceof Game) {
-//            // Game-Part is being parsed
-//            additionalNode = parseGame();
-//            layoutContainer.getChildren().add(additionalNode);
-////            for (ContainerToBeReplaced container : ((Game) objectUIHasToBeBuild).getContainers()) {
-////                UIBuilder innerUI = new UIBuilder(container);
-////                additionalNode = innerUI.parseObject();
-////                layoutContainer.getChildren().add(additionalNode);
-////            }
-//        }
-//        else if (objectUIHasToBeBuild instanceof VariableContainer) {
-//            additionalNode = parseVariableContainer();
-//            layoutContainer.getChildren().add(additionalNode);
-//
-//        }
-//        else if(objectUIHasToBeBuild instanceof LinearContainer)
-//        {
-//            additionalNode = parseLinearContainer();
-//            layoutContainer.getChildren().add(additionalNode);
-//
-//        }
-//        else if(objectUIHasToBeBuild instanceof LinearQuantityContainer)
-//        {
-//
-//        }
-//        else if (objectUIHasToBeBuild instanceof Mission) {
-//            additionalNode = parseMission();
-//            layoutContainer.getChildren().add(additionalNode);
-//        }
-//        else if (objectUIHasToBeBuild instanceof MissionComponent) {
-//            additionalNode = parseMissionComponent();
-//            layoutContainer.getChildren().add(additionalNode);
-//        }
-//
-//        return layoutContainer;
-//    }
 
-    private TitledPane parseGameElement(GameElement gameElement)
+    public void turnNodesVisible()
+    {
+        for (Node node : invisibleNodes)
+        {
+            allNodesVisible = true;
+            node.managedProperty().bind(node.visibleProperty());
+            node.setVisible(true);
+        }
+    }
+
+    public void turnNodesInvisible()
+    {
+        for (Node node : invisibleNodes)
+        {
+            allNodesVisible = false;
+            node.managedProperty().bind(node.visibleProperty());
+            node.setVisible(false);
+        }
+    }
+
+    private TitledPane parseGameElement(GameComponent gameElement)
     {
         if (gameElement instanceof Mission)
         {
@@ -120,60 +98,81 @@ public class UIBuilder
     private Node parseMissionComponent(MissionComponent misComp)
     {
         VBox missionComponentLayout = new VBox();
-        //        missionComponentLayout.setStyle("-fx-border:style solid;" + "-fx-border-width:1;" + "-fx-border-color: black;");
-//            MissionComponent missionComponent = ((MissionComponent) field.get(this));
         HBox missionComponentLayoutContent = new HBox();
         missionComponentLayoutContent.setStyle("-fx-border:style solid; -fx-border-width:1; -fx-border-color: black;");
-        for (String string : misComp.getNecessaryFields())
+        for (Field someField : misComp.getNecessaryHeaderFields())
         {
-            try
+            missionComponentLayout.getChildren().add(makeHBoxDependingOnFieldAndMissionObject(someField, misComp));
+        }
+        for(Field someField : misComp.getOptinalHeaderFields())
+        {
+            if(allNodesVisible)
             {
-                Field someField = getFieldByString(string, misComp);
-                missionComponentLayout.getChildren().add(makeHBoxDependingOnFieldAndClass(someField, misComp));
+                missionComponentLayout.getChildren().add(makeInvisibleHBoxForOptionalFieldsDependingOnFieldAndClass(someField, misComp));
+                this.turnNodesVisible();
             }
-            catch (IllegalAccessException | SecurityException | IllegalArgumentException | NoSuchMethodException ex)
+            else
             {
-                System.out.println("NewUIBuilder Class - parseMissionComponent Function: " + ex);
+                missionComponentLayout.getChildren().add(makeInvisibleHBoxForOptionalFieldsDependingOnFieldAndClass(someField, misComp));
             }
+        }
+        for (Field someField : misComp.getNecessaryNonHeaderFields())
+        {
+            missionComponentLayout.getChildren().add(makeHBoxDependingOnFieldAndMissionObject(someField, misComp));
         }
         missionComponentLayout.getChildren().add(missionComponentLayoutContent);
 
         return missionComponentLayout;
     }
 
-    private TitledPane parseMission(GameElement gameElement)
+    private TitledPane parseMission(GameComponent gameElement)
     {
-        final Mission mission = (Mission) gameElement;
+        Mission mission = (Mission) gameElement;
         TitledPane missionLayout = new TitledPane();
         VBox titledPaneContent = new VBox();
+        titledPaneContent.setStyle("-fx-background-color: green;");
         missionLayout.setText(mission.getClass().getSimpleName());
         missionLayout.setContent(titledPaneContent);
         missionLayout.setExpanded(true);
 
-        for (String necessaryField : mission.getNecessaryFields())
+        ArrayList<Field> allNecessaryMissionFields = new ArrayList<>();
+        allNecessaryMissionFields.addAll(mission.getNecessaryHeaderFields());
+        allNecessaryMissionFields.addAll(mission.getNecessaryNonHeaderFields());
+
+        for (Field field : allNecessaryMissionFields)
         {
-            try
+            if (field.getType().toString().toLowerCase().contains("property")) // nicht-arraylist feld
             {
-                Field field = getFieldByString(necessaryField, mission);
-                if (field.getType().toString().toLowerCase().contains("property")) // nicht-arraylist feld
-                {
-                    titledPaneContent.getChildren().add(makeHBoxDependingOnFieldAndClass(field, mission));
-                }
-                else if (field.getType().toString().contains(ArrayList.class.getName())) // arraylist feld
-                {
-                    titledPaneContent.getChildren().add(makeVBoxForArrayList(field, mission));
-                }
+                titledPaneContent.getChildren().add(makeHBoxDependingOnFieldAndMissionObject(field, mission));
+            }
+            else if (field.getType().toString().contains(ArrayList.class.getName())) // arraylist feld
+            {
+                titledPaneContent.getChildren().add(makeVBoxForArrayList(field, mission));
+            }
 //                else
 //                {
 //                    titledPaneContent.getChildren().add(parseMissionComponent(field));
 //                }
-            }
-            catch (IllegalAccessException | NoSuchMethodException | SecurityException ex)
-            {
-                System.out.println("NewUIBuilder Class - parseMission Function: " + ex);
-            }
         }
-
+        for (Field field : mission.getOptinalHeaderFields())    // Bearbeitet aktuell nur Property-type Felder
+        {
+                System.out.println(field.getName());
+            if (field.getType().toString().toLowerCase().contains("property")) // nicht-arraylist feld
+            {
+//                    HBox invisibleBox = makeInvisibleHBoxForOptionalFieldsDependingOnFieldAndClass(field, mission);
+//                    invisibleBox.setVisible(false);
+//                    invisibleNodes.add(invisibleBox);
+                titledPaneContent.getChildren().add(makeInvisibleHBoxForOptionalFieldsDependingOnFieldAndClass(field, mission));
+            }
+//                else if (field.getType().toString().contains(ArrayList.class.getName())) // arraylist feld
+//                {
+//                    System.out.println("wird nie ausgeführt!");
+//                    VBox invisibleVBox = makeVBoxForArrayList(field, mission);
+//                    invisibleVBox.setVisible(false);
+//                    invisibleNodes.add(invisibleVBox);
+//                    titledPaneContent.getChildren().add(invisibleVBox);
+//                }
+        }
         return missionLayout;
     }
 
@@ -197,7 +196,7 @@ public class UIBuilder
 //            missionTitledPane.setText(allowedClass.getSimpleName());
 //            missionTitledPane.setExpanded(false);
 
-            GameElement newGameElement = linCont.makeNewGameElementByClass(allowedClass);
+            GameComponent newGameElement = linCont.makeNewGameElementByClass(allowedClass);
             newGameElement.setId(linCont.getId() + "-" + ((Mission) newGameElement).getType() + "-" + linCont.getGameElements().indexOf(newGameElement));
 
 //            UIBuilder newGameElementUI = new UIBuilder(newGameElement);
@@ -222,9 +221,8 @@ public class UIBuilder
 
         if (varCont.getMaxMissionCount() == 1 && varCont.getAllowedClasses().size() == 1)
         {
-            GameElement newGameElementInstance = varCont.makeNewGameElementByClass(varCont.getAllowedClasses().get(0));
+            GameComponent newGameElementInstance = varCont.makeNewGameElementByClass(varCont.getAllowedClasses().get(0));
             newGameElementInstance.setId(varCont.getId() + "-" + ((Mission) newGameElementInstance).getType() + "-" + varCont.getGameElements().indexOf(newGameElementInstance));
-//            UIBuilder newGameElementUI = new UIBuilder(newGameElementInstance);
             innerContainerLayoutContent.getPanes().add(parseGameElement(newGameElementInstance));
         }
         else
@@ -240,20 +238,20 @@ public class UIBuilder
                     {
                         if (varCont.hasSpaceLeft())
                         {
-                            final GameElement newGameElementInstance = varCont.makeNewGameElementByClass(allowedClass);
+                            final GameComponent newGameElementInstance = varCont.makeNewGameElementByClass(allowedClass);
                             newGameElementInstance.setId(varCont.getId() + "-" + ((Mission) newGameElementInstance).getType() + "-" + varCont.getGameElements().indexOf(newGameElementInstance));
-//                        UIBuilder newGameElementUI = new UIBuilder(newGameElementInstance);
                             final TitledPane tp = parseGameElement(newGameElementInstance);
-                            tp.setOnMouseClicked(new EventHandler<MouseEvent>(){
-                               @Override
-                               public void handle(MouseEvent t)
-                               {
-                                   if(t.getButton() == MouseButton.SECONDARY)
-                                   {
-                                       varCont.deleteGameElement(newGameElementInstance);
-                                       innerContainerLayoutContent.getPanes().remove(tp);
-                                   }
-                               }
+                            tp.setOnMouseClicked(new EventHandler<MouseEvent>()
+                            {
+                                @Override
+                                public void handle(MouseEvent t)
+                                {
+                                    if (t.getButton() == MouseButton.SECONDARY)
+                                    {
+                                        varCont.deleteGameElement(newGameElementInstance);
+                                        innerContainerLayoutContent.getPanes().remove(tp);
+                                    }
+                                }
                             });
                             innerContainerLayoutContent.getPanes().add(tp);
                         }
@@ -272,40 +270,14 @@ public class UIBuilder
 
     public Node parseGame()
     {
-//        Game gameReference = (Game) objectUIHasToBeBuild;
         VBox gameLayout = new VBox();
-        MenuBar menuBar = new MenuBar();
-        Menu menu1 = new Menu("File");
-        MenuItem saveMenuItem = new MenuItem("Save");
-        MenuItem exitMenuItem = new MenuItem("Exit");
-        menu1.getItems().addAll(saveMenuItem, exitMenuItem);
-        menuBar.getMenus().add(menu1);
-        gameLayout.getChildren().add(menuBar);
 
-        for(String fieldName : game.getNecessaryFields())
+        for (String fieldName : game.getNecessaryFields())
         {
-            try
-            {
-                Field field = getFieldByString(fieldName, game);
-                HBox hBox = makeHBoxDependingOnFieldAndClass(field, game);
-                gameLayout.getChildren().add(hBox);
-            }
-            catch (IllegalAccessException | SecurityException | IllegalArgumentException | NoSuchMethodException ex)
-            {
-                System.out.println("UIBuilder Class - parseGame Function: " + ex);
-            }
+            Field field = getFieldByString(fieldName, game);
+            HBox hBox = makeHBoxDependingOnFieldAndMissionObject(field, game);
+            gameLayout.getChildren().add(hBox);
         }
-//        HBox hBox = makeHBoxDependingOnFieldAndClass(new Field(game.idProperty(), game);
-//        Label newLabel = new Label("Game ID ");
-//        TextField textField = new TextField();
-//        hBox.getChildren().addAll(newLabel, textField);
-//        gameLayout.getChildren().add(hBox);
-//
-//        if (game.idProperty().isNotNull().get())
-//        {
-//            textField.setText(game.idProperty().get());
-//        }
-//        game.idProperty().bindBidirectional(textField.textProperty());
         for (Container container : game.getContainers())
         {
             gameLayout.getChildren().add(parseContainer(container));
@@ -314,9 +286,86 @@ public class UIBuilder
         return gameLayout;
     }
 
-    
+    private HBox makeInvisibleHBoxForOptionalFieldsDependingOnFieldAndClass(Field field, Object missionObject)
+    {
+        final HBox returnHBox = new HBox();
+        returnHBox.managedProperty().bind(returnHBox.visibleProperty());
+        returnHBox.setVisible(false);
+        invisibleNodes.add(returnHBox);
+        try
+        {
+            if(field.getName().equalsIgnoreCase("image"))
+            {
+                field.setAccessible(true);
+                FileBrowser fb = new FileBrowser("Images", "*.jpg", "*.png", "*.bmp");
+                fb.filePathProperty().bindBidirectional(getStringPropertyByFieldAndClass(field, missionObject));
+                returnHBox.getChildren().add(fb.getNode());
+            }
+            else if (field.getType().toString().contains("StringProperty") && !field.getName().equalsIgnoreCase("image"))
+            {
+                final TextField bindToStringPropertyTextField = new TextField();
+
+                field.setAccessible(true);
+                if (!((StringProperty) field.get(missionObject)).get().isEmpty())
+                {
+                    bindToStringPropertyTextField.setText(((StringProperty) field.get(missionObject)).get());
+                }
+                bindToStringPropertyTextField.textProperty().bindBidirectional(getStringPropertyByFieldAndClass(field, missionObject));
+
+                //
+                //      Color changeing part of TextFields if TextFields are still empty
+                bindToStringPropertyTextField.textProperty().addListener(new ChangeListener<String>()
+                {
+                    @Override
+                    public void changed(ObservableValue<? extends String> ov, String oldString, String newString)
+                    {
+                        if (oldString.isEmpty() && !newString.isEmpty())//bindToStringPropertyTextField.textProperty().get().isEmpty() || bindToStringPropertyTextField.getText().isEmpty())
+                        {
+                            invisibleNodes.remove(returnHBox);
+                        }
+                        else if (!oldString.isEmpty() && newString.isEmpty())
+                        {
+                            invisibleNodes.add(returnHBox);
+                        }
+                    }
+                });
+                //
+                //
+                returnHBox.getChildren().addAll(new Label(field.getName()), bindToStringPropertyTextField);
+            }
+            else if (field.getType().toString().contains("IntegerProperty"))
+            {
+                NumericTextField bindToNumiercPropertyTextField = new NumericTextField();
+                field.setAccessible(true);
+                if (((IntegerProperty) field.get(missionObject)).asString().isNotNull().get())
+                {
+                    bindToNumiercPropertyTextField.setText(((Integer) field.get(missionObject)).toString());          // Testen !!
+                }
+                bindToNumiercPropertyTextField.textProperty().bindBidirectional(getIntegerPropertyByFieldAndClass(field, missionObject), new NumberStringConverter());
+                returnHBox.getChildren().addAll(new Label(field.getName()), bindToNumiercPropertyTextField);
+            }
+            else if (field.getType().toString().contains("BooleanProperty"))
+            {
+                ChoiceBox bindToBooleanPropertyChoiceBox = new ChoiceBox();
+                bindToBooleanPropertyChoiceBox.getItems().addAll(true, false);
+                field.setAccessible(true);
+                if (((BooleanProperty) field.get(missionObject)).asString().isNotNull().get())
+                {
+                    bindToBooleanPropertyChoiceBox.getSelectionModel().select(((BooleanProperty) field.get(missionObject)).toString());       // Testen !!
+                }
+                bindToBooleanPropertyChoiceBox.valueProperty().bindBidirectional(getBooleanPropertyByFieldAndClass(field, missionObject));
+                returnHBox.getChildren().addAll(new Label(field.getName()), bindToBooleanPropertyChoiceBox);
+            }
+        }
+        catch (IllegalAccessException | IllegalArgumentException | SecurityException ex)
+        {
+            System.out.println(this.getClass().getSimpleName() + " - makeHBoxDependingOnFieldAndClass: " + ex);
+        }
+        return returnHBox;
+    }
+
     // Enthält zwei mögliche Fehlerquellen, hat keiner dazu geschrieben welche
-    protected HBox makeHBoxDependingOnFieldAndClass(Field field, Object gameElement) throws IllegalAccessException, SecurityException, IllegalArgumentException, NoSuchMethodException
+    protected HBox makeHBoxDependingOnFieldAndMissionObject(Field field, Object missionObject)
     {
         HBox returnHBox = new HBox();
         try
@@ -324,30 +373,30 @@ public class UIBuilder
             if (field.getType().toString().contains("StringProperty"))
             {
                 final TextField bindToStringPropertyTextField = new TextField();
-                
+
                 field.setAccessible(true);
-                if (!((StringProperty) field.get(gameElement)).get().isEmpty())
+                if (!((StringProperty) field.get(missionObject)).get().isEmpty())
                 {
-                    bindToStringPropertyTextField.setText(((StringProperty) field.get(gameElement)).get());
+                    bindToStringPropertyTextField.setText(((StringProperty) field.get(missionObject)).get());
                 }
                 else
                 {
                     bindToStringPropertyTextField.setStyle("-fx-background-color: red;");
                 }
-                bindToStringPropertyTextField.textProperty().bindBidirectional(getStringPropertyByFieldAndClass(field, gameElement));
-                
+                bindToStringPropertyTextField.textProperty().bindBidirectional(getStringPropertyByFieldAndClass(field, missionObject));
+
                 //
                 //      Color changeing part of TextFields if TextFields are still empty
-                bindToStringPropertyTextField.textProperty().addListener(new ChangeListener<String>() {
-
+                bindToStringPropertyTextField.textProperty().addListener(new ChangeListener<String>()
+                {
                     @Override
                     public void changed(ObservableValue<? extends String> ov, String t, String t1)
                     {
-                        if(t1.isEmpty())//bindToStringPropertyTextField.textProperty().get().isEmpty() || bindToStringPropertyTextField.getText().isEmpty())
+                        if (!t.isEmpty() && t1.isEmpty())
                         {
-                           bindToStringPropertyTextField.setStyle("-fx-background-color: red;");
+                            bindToStringPropertyTextField.setStyle("-fx-background-color: red;");
                         }
-                        else
+                        else if(t.isEmpty() && !t1.isEmpty())
                         {
                             bindToStringPropertyTextField.setStyle("-fx-background-color: white;");
                         }
@@ -361,11 +410,11 @@ public class UIBuilder
             {
                 NumericTextField bindToNumiercPropertyTextField = new NumericTextField();
                 field.setAccessible(true);
-                if (((IntegerProperty) field.get(gameElement)).asString().isNotNull().get())
+                if (((IntegerProperty) field.get(missionObject)).asString().isNotNull().get())
                 {
-                    bindToNumiercPropertyTextField.setText(((Integer) field.get(gameElement)).toString());          // Testen !!
+                    bindToNumiercPropertyTextField.setText(((Integer) field.get(missionObject)).toString());          // Testen !!
                 }
-                bindToNumiercPropertyTextField.textProperty().bindBidirectional(getIntegerPropertyByFieldAndClass(field, gameElement), new NumberStringConverter());
+                bindToNumiercPropertyTextField.textProperty().bindBidirectional(getIntegerPropertyByFieldAndClass(field, missionObject), new NumberStringConverter());
                 returnHBox.getChildren().addAll(new Label(field.getName()), bindToNumiercPropertyTextField);
             }
             else if (field.getType().toString().contains("BooleanProperty"))
@@ -373,50 +422,82 @@ public class UIBuilder
                 ChoiceBox bindToBooleanPropertyChoiceBox = new ChoiceBox();
                 bindToBooleanPropertyChoiceBox.getItems().addAll(true, false);
                 field.setAccessible(true);
-                if (((BooleanProperty) field.get(gameElement)).asString().isNotNull().get())
+                if (((BooleanProperty) field.get(missionObject)).asString().isNotNull().get())
                 {
 //                            bindToBooleanPropertyChoiceBox.setText(((BooleanProperty)field.get(objectUIHasToBeBuild)).toString());
-                    bindToBooleanPropertyChoiceBox.getSelectionModel().select(((BooleanProperty) field.get(gameElement)).toString());       // Testen !!
+                    bindToBooleanPropertyChoiceBox.getSelectionModel().select(((BooleanProperty) field.get(missionObject)).toString());       // Testen !!
                 }
-                bindToBooleanPropertyChoiceBox.valueProperty().bindBidirectional(getBooleanPropertyByFieldAndClass(field, gameElement));
+                bindToBooleanPropertyChoiceBox.valueProperty().bindBidirectional(getBooleanPropertyByFieldAndClass(field, missionObject));
                 returnHBox.getChildren().addAll(new Label(field.getName()), bindToBooleanPropertyChoiceBox);
             }
         }
-        catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException ex)
+        catch (IllegalAccessException | IllegalArgumentException | SecurityException ex)
         {
-            System.out.println("NewUIBuilder Class - makeHBoxDependingOnFieldAndClass Function: " + ex);
+            System.out.println(this.getClass().getSimpleName() + " - makeHBoxDependingOnFieldAndMissionObject: " + ex);
         }
         return returnHBox;
     }
 
-    protected Method getMethodPropertyByFieldAndClass(Field field, Class currentClass) throws NoSuchMethodException, SecurityException
+    protected Method getMethodPropertyByFieldAndClass(Field field, Class currentClass)
     {
-        Method methodProperty = currentClass.getMethod(field.getName() + "Property");
-        return methodProperty;
+        try
+        {
+            Method methodProperty = currentClass.getMethod(field.getName() + "Property");
+            return methodProperty;
+        }
+        catch (NoSuchMethodException | SecurityException e)
+        {
+            System.out.println(this.getClass().getSimpleName() + " - getMethodPropertyByFieldAndClass: " + e);
+        }
+        return null;
     }
 
-    protected StringProperty getStringPropertyByFieldAndClass(Field field, Object gameElement) throws IllegalAccessException, SecurityException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
+    protected StringProperty getStringPropertyByFieldAndClass(Field field, Object gameElement)
     {
-        Class currentClass = gameElement.getClass();
-        Method propertyMethod = getMethodPropertyByFieldAndClass(field, currentClass);
-        StringProperty invokedProperty = (StringProperty) propertyMethod.invoke(gameElement);
-        return invokedProperty;
+        try
+        {
+            Class currentClass = gameElement.getClass();
+            Method propertyMethod = getMethodPropertyByFieldAndClass(field, currentClass);
+            StringProperty invokedProperty = (StringProperty) propertyMethod.invoke(gameElement);
+            return invokedProperty;
+        }
+        catch (IllegalAccessException | SecurityException | IllegalArgumentException | InvocationTargetException ex)
+        {
+            System.out.println(this.getClass().getSimpleName() + " - getStringPropertyByFieldAndClass: " + ex);
+        }
+        return null;
     }
 
-    protected BooleanProperty getBooleanPropertyByFieldAndClass(Field field, Object gameElement) throws IllegalAccessException, SecurityException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
+    protected BooleanProperty getBooleanPropertyByFieldAndClass(Field field, Object gameElement)
     {
-        Class currentClass = gameElement.getClass();
-        Method propertyMethod = getMethodPropertyByFieldAndClass(field, currentClass);
-        BooleanProperty invokedProperty = (BooleanProperty) propertyMethod.invoke(gameElement);
-        return invokedProperty;
+        try
+        {
+            Class currentClass = gameElement.getClass();
+            Method propertyMethod = getMethodPropertyByFieldAndClass(field, currentClass);
+            BooleanProperty invokedProperty = (BooleanProperty) propertyMethod.invoke(gameElement);
+            return invokedProperty;
+        }
+        catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex)
+        {
+            System.out.println(this.getClass().getSimpleName() + " - getBooleanPropertyByFieldAndClass: " + ex);
+        }
+        return null;
     }
 
-    protected IntegerProperty getIntegerPropertyByFieldAndClass(Field field, Object gameElement) throws IllegalAccessException, SecurityException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
+    protected IntegerProperty getIntegerPropertyByFieldAndClass(Field field, Object gameElement)
     {
-        Class currentClass = gameElement.getClass();
-        Method propertyMethod = getMethodPropertyByFieldAndClass(field, currentClass);
-        IntegerProperty invokedProperty = (IntegerProperty) propertyMethod.invoke(gameElement);
-        return invokedProperty;
+        try
+        {
+            Class currentClass = gameElement.getClass();
+            Method propertyMethod = getMethodPropertyByFieldAndClass(field, currentClass);
+            IntegerProperty invokedProperty = (IntegerProperty) propertyMethod.invoke(gameElement);
+            return invokedProperty;
+        }
+        catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex)
+        {
+            System.out.println(this.getClass().getSimpleName() + " - getIntegerPropertyByFieldAndClass: " + ex);
+        }
+        return null;
     }
 
     private ArrayList<Class> getSuperClassesUpToObjectClassAsArrayList(Object obj)
@@ -452,12 +533,11 @@ public class UIBuilder
                 try
                 {
                     MissionComponent object = (MissionComponent) getAddMethodForArrayList(field, currentClass).invoke(gameElement);
-//                    UIBuilder newUI = new UIBuilder(object);
                     returnValue.getChildren().add(parseMissionComponent(object));
                 }
                 catch (InvocationTargetException | IllegalAccessException ex)
                 {
-                    System.out.println("NewUIBuilder Class - makeVBoxForArrayList Function: " + ex);
+                    System.out.println(this.getClass().getSimpleName() + " - makeVBoxForArrayList: " + ex);
                 }
             }
         });
@@ -473,7 +553,7 @@ public class UIBuilder
         }
         catch (NoSuchMethodException | SecurityException ex)
         {
-            System.out.println("NewUIBuilder Class - getAddMethodForArrayList Function: " + ex);
+            System.out.println(this.getClass().getSimpleName() + " - getAddMethodForArrayList: " + ex);
         }
         return null;
     }
