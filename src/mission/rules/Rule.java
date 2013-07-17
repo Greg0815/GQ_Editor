@@ -4,12 +4,11 @@
  */
 package mission.rules;
 
-import mission.rules.actions.Action;
-import mission.rules.conditions.Condition;
-import main.AssembleInterface;
-import main.BaseComponent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import main.BaseComponent;
+import mission.rules.actions.Action;
+import mission.rules.conditions.Condition;
 
 /**
  *

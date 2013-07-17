@@ -6,10 +6,6 @@ package main;
 
 import blocks.Description;
 import containers.Game;
-import customInputNodes.FileBrowser;
-import mission.components.Dialogitem;
-import mission.components.Hotspot;
-import mission.NPCTalk;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.application.Application;
@@ -34,6 +30,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import mission.components.Hotspot;
 
 /**
  *
@@ -87,7 +84,7 @@ public class EditorOberflaeche extends Application
     public void start(final Stage primaryStage)
     {
         initialization(new Pair<String, Description>("minimal Example", (new ExampleDescriptions()).minimalExample()), new Pair<String, Description>("Opa Enkel", (new ExampleDescriptions()).opaEnkel()), new Pair<String, Description>("Container Test", (new ExampleDescriptions()).newContainerModels()));
-        setCssPath("Styles/customStyle1.css");
+        setCssPath("styles/customStyle1.css");
         
         stage = primaryStage;
         stage.setScene(makeGameSelectionOberflaeche());

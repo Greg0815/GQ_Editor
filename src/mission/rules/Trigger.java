@@ -4,7 +4,6 @@
  */
 package mission.rules;
 
-import main.AssembleInterface;
 import main.BaseComponent;
 import java.util.ArrayList;
 

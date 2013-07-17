@@ -287,10 +287,9 @@ public class UIBuilder
     public Node parseGame()
     {
         VBox gameLayout = new VBox();
-
-        for (String fieldName : game.getNecessaryFields())
+System.out.println(game.getNecessaryHeaderFields().size());
+        for (Field field : game.getNecessaryHeaderFields())
         {
-            Field field = getFieldByString(fieldName, game);
             HBox hBox = makeHBoxDependingOnFieldAndMissionObject(field, game);
             gameLayout.getChildren().add(hBox);
         }

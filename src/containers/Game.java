@@ -4,62 +4,25 @@
  */
 package containers;
 
-import main.AssembleInterface;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import main.BaseComponent;
 
 /**
  *
  * @author Gregor
  */
-public class Game implements AssembleInterface
+public class Game extends BaseComponent
 {
     private StringProperty id;
     private ArrayList<Container> containers;
-    private ArrayList<String> necessaryFields;
 
     public Game()
     {
         id = new SimpleStringProperty("");
         containers = new ArrayList<>();
-        necessaryFields = new ArrayList<>();
-        necessaryFields.add("id");
-    }
-
-    public ArrayList<String> getNecessaryFields()
-    {
-        return necessaryFields;
-    }
-
-    public void addNecessaryFields(String... necessaryFields)
-    {
-        this.necessaryFields.addAll(Arrays.asList(necessaryFields));
-    }
-
-    @Override
-    public Boolean isComplete()
-    {
-        Boolean isComplete = true;
-        if (id.get().isEmpty())
-        {
-            System.out.println("Game ID is missing");
-            isComplete = false;
-        }
-        else
-        {
-            for (Container container : containers)
-            {
-                if (!container.isComplete())
-                {
-                    System.out.println("Container incomplete: " + container.getId());
-                    isComplete = false;
-                    break;
-                }
-            }
-        }
-        return isComplete;
+        addNecessaryAndOptionalFields();
     }
 
     public StringProperty idProperty()
@@ -91,5 +54,11 @@ public class Game implements AssembleInterface
     public String assemble()
     {
         return "<game id=\"" + idProperty().get() + "\">" + utilitys.createStringFromArrayList(containers) + "</game>";
+    }
+
+    @Override
+    protected void addNecessaryAndOptionalFields()
+    {
+        addNecessaryHeaderFields(getFieldByString("id"));
     }
 }
