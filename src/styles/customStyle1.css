@@ -1,0 +1,22 @@
+.root{
+ -fx-font-size: 15pt;
+ -fx-font-family: "Tahoma";
+ -fx-background: #A78732;
+ -fx-focus-color: #B6A678
+}
+
+.button{
+ -fx-text-fill: #006464;
+ -fx-border-radius: 20;
+ -fx-padding: 5;
+}
+
+.scroll-bar{
+ -fx-border-color: white;
+ -fx-border-style: dashed;
+}
+
+.slider{
+ -fx-border-color: white;
+ -fx-border-style: dashed;
+}
