@@ -71,25 +71,11 @@ public class WebPage extends Mission
         return cancel;
     }
 
-//    @Override
-//    public String createSpecificMissionHeader()
-//    {
-//        return utilitys.url(url.get()) + utilitys.file(file.get()) + utilitys.cancel(cancel.get());
-//    }
-
     @Override
     public String assemble()
     {
-//        return createMissionHeader() + buildMissionTail();
         return buildMissionHead() + buildMissionTail();
     }
-
-//    @Override
-//    public Boolean isComplete()
-//    {
-//        Boolean isComplete = true;
-//        return isComplete;
-//    }
 
     @Override
     protected final void addNecessaryAndOptionalFields()

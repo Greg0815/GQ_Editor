@@ -33,14 +33,14 @@ public class LinearContainer extends Container
     {
         // apply internal Connections
         // apply other Triggers
-        return utilitys.createStringFromArrayList(getGameElements());
+        return utilitys.createStringFromArrayList(getGameComponents());
     }
 
     @Override
     public Boolean isComplete()
     {
         Boolean isComplete = true;
-        for(GameComponent gameComponent : this.getGameElements())
+        for(GameComponent gameComponent : this.getGameComponents())
         {
             if(!gameComponent.isComplete())
             {

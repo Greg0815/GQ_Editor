@@ -45,7 +45,7 @@ public abstract class Container extends BaseComponent
         onLeaveActions = new ArrayList<>();
     }
     
-    public ArrayList<GameComponent> getGameElements()
+    public ArrayList<GameComponent> getGameComponents()
     {
         return gameComponents;
     }

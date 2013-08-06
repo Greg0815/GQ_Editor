@@ -25,7 +25,7 @@ public class Block
 //    private ArrayList<TriggerAction> triggerActions;
     private ArrayList<Rule> onSuccessRules;
     private ArrayList<Rule> onFailRules;
-    private ArrayList<Rule> onBeginRules;
+    private ArrayList<Rule> onStartRules;
     private ArrayList<Rule> onEndRules;
     private ArrayList<Rule> onEnterRules;
     private ArrayList<Rule> onLeaveRules;
@@ -40,7 +40,7 @@ public class Block
         // pfffffffffffft
         onSuccessRules = new ArrayList<>();
         onFailRules = new ArrayList<>();
-        onBeginRules = new ArrayList<>();
+        onStartRules = new ArrayList<>();
         onEndRules = new ArrayList<>();
         onEnterRules = new ArrayList<>();
         onLeaveRules = new ArrayList<>();
@@ -56,7 +56,23 @@ public class Block
         // pfffffffffffft
         onSuccessRules = new ArrayList<>();
         onFailRules = new ArrayList<>();
-        onBeginRules = new ArrayList<>();
+        onStartRules = new ArrayList<>();
+        onEndRules = new ArrayList<>();
+        onEnterRules = new ArrayList<>();
+        onLeaveRules = new ArrayList<>();
+    }
+    
+    public Block(String id, String internalConnector)
+    {
+        this.id = id;
+        minMissionCount = 1;
+        maxMissionCount = 1;
+        this.internalConnector = checkInternalConnectorCorrectness(internalConnector) ? internalConnector : "onEnd";
+//        triggerActions = new ArrayList<>();
+        // pfffffffffffft
+        onSuccessRules = new ArrayList<>();
+        onFailRules = new ArrayList<>();
+        onStartRules = new ArrayList<>();
         onEndRules = new ArrayList<>();
         onEnterRules = new ArrayList<>();
         onLeaveRules = new ArrayList<>();
@@ -67,12 +83,12 @@ public class Block
         this.id = id;
         minMissionCount = 1;
         maxMissionCount = 1;
-        internalConnector = "";
+        internalConnector = "onEnd";
 //        triggerActions = new ArrayList<>();
         // pfffffffffffft
         onSuccessRules = new ArrayList<>();
         onFailRules = new ArrayList<>();
-        onBeginRules = new ArrayList<>();
+        onStartRules = new ArrayList<>();
         onEndRules = new ArrayList<>();
         onEnterRules = new ArrayList<>();
         onLeaveRules = new ArrayList<>();
@@ -88,9 +104,9 @@ public class Block
         return onFailRules;
     }
 
-    public ArrayList<Rule> getOnBeginRules()
+    public ArrayList<Rule> getOnStartRules()
     {
-        return onBeginRules;
+        return onStartRules;
     }
 
     public ArrayList<Rule> getOnEndRules()
@@ -108,92 +124,92 @@ public class Block
         return onLeaveRules;
     }
 
-    public void addSuccessRule(Rule... rules)
+    public void addOnSuccessRule(Rule... rules)
     {
         onSuccessRules.addAll(Arrays.asList(rules));
     }
 
-//    public void addSuccessRule(String type, String parameters)
+//    public void addOnSuccessRule(String type, String parameters)
 //    {
 //        throw new NotImplementedException();
 //    }
 //
-//    public void addSuccessRule(ContainerToBeReplaced containerReference)
+//    public void addOnSuccessRule(ContainerToBeReplaced containerReference)
 //    {
 //        onSuccessActions.add(new ActionStartMission(containerReference));
 //    }
 
-    public void addFailRule(Rule... rules)
+    public void addOnFailRule(Rule... rules)
     {
         onFailRules.addAll(Arrays.asList(rules));
     }
 
-//    public void addFailRule(String type, String parameters)
+//    public void addOnFailRule(String type, String parameters)
 //    {
 //        throw new NotImplementedException();
 //    }
 //
-//    public void addFailRule(ContainerToBeReplaced containerReference)
+//    public void addOnFailRule(ContainerToBeReplaced containerReference)
 //    {
 //        onFailActions.add(new ActionStartMission(containerReference));
 //    }
 
-    public void addBeginRule(Rule... rules)
+    public void addOnStartRule(Rule... rules)
     {
-        onBeginRules.addAll(Arrays.asList(rules));
+        onStartRules.addAll(Arrays.asList(rules));
     }
 
-//    public void addBeginRule(String type, String parameters)
+//    public void addOnStartRule(String type, String parameters)
 //    {
 //        throw new NotImplementedException();
 //    }
 //
-//    public void addBeginRule(ContainerToBeReplaced containerReference)
+//    public void addOnStartRule(ContainerToBeReplaced containerReference)
 //    {
 //        onBeginActions.add(new ActionStartMission(containerReference));
 //    }
 
-    public void addEndRule(Rule... rules)
+    public void addOnEndRule(Rule... rules)
     {
         onEndRules.addAll(Arrays.asList(rules));
     }
 
-//    public void addEndRule(String type, String parameters)
+//    public void addOnEndRule(String type, String parameters)
 //    {
 //        throw new NotImplementedException();
 //    }
 //
-//    public void addEndRule(ContainerToBeReplaced containerReference)
+//    public void addOnEndRule(ContainerToBeReplaced containerReference)
 //    {
 //        onEndActions.add(new ActionStartMission(containerReference));
 //    }
 
-    public void addEnterRule(Rule... rules)
+    public void addOnEnterRule(Rule... rules)
     {
         onEnterRules.addAll(Arrays.asList(rules));
     }
 
-//    public void addEnterRule(String type, String parameters)
+//    public void addOnEnterRule(String type, String parameters)
 //    {
 //        throw new NotImplementedException();
 //    }
 //
-//    public void addEnterRule(ContainerToBeReplaced containerReference)
+//    public void addOnEnterRule(ContainerToBeReplaced containerReference)
 //    {
 //        onEnterActions.add(new ActionStartMission(containerReference));
 //    }
 
-    public void addLeaveRule(Rule... rules)
+    public void addOnLeaveRule(Rule... rules)
     {
         onLeaveRules.addAll(Arrays.asList(rules));
     }
 
-//    public void addLeaveRule(String type, String parameters)
+//    public void addOnLeaveRule(String type, String parameters)
 //    {
 //        throw new NotImplementedException();
 //    }
 //
-//    public void addLeaveRule(ContainerToBeReplaced containerReference)
+//    public void addOnLeaveRule(ContainerToBeReplaced containerReference)
 //    {
 //        onLeaveActions.add(new ActionStartMission(containerReference));
 //    }
@@ -266,9 +282,4 @@ public class Block
     {
         return maxMissionCount;
     }
-
-//    public ArrayList<TriggerAction> getTriggerActions()
-//    {
-//        return triggerActions;
-//    }
 }

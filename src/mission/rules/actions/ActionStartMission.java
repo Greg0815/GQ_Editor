@@ -46,7 +46,7 @@ public class ActionStartMission extends Action
     @Override
     public String assemble()
     {
-        return "<action" + utilitys.type(this.getType()) + utilitys.id(this.id) + "/>";
+        return "<action" + utilitys.type(getType()) + utilitys.id(id) + "/>";
     }
 
     @Override

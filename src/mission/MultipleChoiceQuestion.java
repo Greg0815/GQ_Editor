@@ -4,12 +4,12 @@
  */
 package mission;
 
-import mission.components.Answer;
 import java.util.ArrayList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import mission.components.Answer;
 
 /**
  *
@@ -97,48 +97,8 @@ public class MultipleChoiceQuestion extends Mission
     @Override
     public String assemble()
     {
-//        return createMissionHeader() + assembleQuestionAndAnswer() + buildMissionTail();
         return buildMissionHead() + assembleQuestionAndAnswer() + buildMissionTail();
     }
-
-//    @Override
-//    public String createSpecificMissionHeader()
-//    {
-////        String returnString = "";
-////        if (loopUntilSuccess.get)
-////        {
-////            returnString += utilitys.loopUntilSuccess(loopUntilSuccess.get());
-////        }
-////        if (shuffle.isBound())
-////        {
-////            returnString += utilitys.shuffle(shuffle.get());
-////        }
-////        return returnString;
-//        return utilitys.loopUntilSuccess(loopUntilSuccess.get()) + utilitys.shuffle(shuffle.get());
-//    }
-
-//    @Override
-//    public Boolean isComplete()
-//    {
-//        Boolean isComplete = true;
-//        if (getId().isEmpty() || questiontext.get().isEmpty())
-//        {
-//            isComplete = false;
-//        }
-//        if (answer.size() < 1)
-//        {
-//            isComplete = false;
-//        }
-//        for (Answer ans : answer)
-//        {
-//            if (!ans.isComplete())
-//            {
-//                isComplete = false;
-//            }
-//        }
-//
-//        return isComplete;
-//    }
 
     @Override
     protected final void addNecessaryAndOptionalFields()

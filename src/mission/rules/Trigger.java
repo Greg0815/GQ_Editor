@@ -22,6 +22,11 @@ public class Trigger extends BaseComponent
         this.rules = new ArrayList<>();
     }
     
+    public String getTriggerType()
+    {
+        return trigger;
+    }
+    
     public void addRule(Rule rule)
     {
         this.rules.add(rule);

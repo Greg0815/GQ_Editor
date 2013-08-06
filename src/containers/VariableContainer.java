@@ -27,12 +27,12 @@ public class VariableContainer extends Container
     
     public void deleteGameElement(GameComponent gameElement)
     {
-        this.getGameElements().remove(gameElement);
+        this.getGameComponents().remove(gameElement);
     }
     
     public Boolean hasSpaceLeft()
     {
-        if(this.getGameElements().size() < this.getMaxMissionCount())
+        if(this.getGameComponents().size() < this.getMaxMissionCount())
         {
             return true;
         }
@@ -42,14 +42,14 @@ public class VariableContainer extends Container
     @Override
     public String assemble()
     {
-        return utilitys.createStringFromArrayList(this.getGameElements());
+        return utilitys.createStringFromArrayList(this.getGameComponents());
     }
 
     @Override
     public Boolean isComplete()
     {
         Boolean isComplete = true;
-        for(GameComponent gameComponent : this.getGameElements())
+        for(GameComponent gameComponent : this.getGameComponents())
         {
             if(!gameComponent.isComplete())
             {

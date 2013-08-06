@@ -4,6 +4,7 @@
  */
 package mission;
 
+import java.io.File;
 import main.GameComponent;
 import main.UtilityFunctions;
 import java.lang.reflect.Field;
@@ -33,27 +34,20 @@ abstract public class Mission extends GameComponent
         return this.type;
     }
 
-//    public String createMissionHeader()
-//    {
-//        return "<mission" + utilitys.type(this.type) + utilitys.id(this.getId()) + createSpecificMissionHeader() + ">" + utilitys.createStringFromArrayList(getTrigger());
-//    }
-
     public String buildMissionTail()
     {
         return "</mission>";
     }
 
-//    protected abstract String createSpecificMissionHeader();
-    
     public String buildMissionHead()
     {
         return buildHeaderString() + utilitys.createStringFromArrayList(getTrigger());
     }
-    
+
     private String buildStringFromFieldArrayList(ArrayList<Field> fields)
     {
         String returnString = "";
-        for(Field field: fields)
+        for (Field field : fields)
         {
             try
             {
@@ -78,7 +72,7 @@ abstract public class Mission extends GameComponent
                 }
                 else if (field.getType().toString().contains("BooleanProperty"))
                 {
-                    BooleanProperty fld = (BooleanProperty)field.get(this);
+                    BooleanProperty fld = (BooleanProperty) field.get(this);
                     Method mtd = UtilityFunctions.class.getMethod(field.getName(), Boolean.class);
                     returnString += mtd.invoke(utilitys, fld.get());
                 }
@@ -90,6 +84,7 @@ abstract public class Mission extends GameComponent
         }
         return returnString;
     }
+
     private String buildHeaderString()
     {
         String tmp = "<mission" + utilitys.type(type);
@@ -98,5 +93,4 @@ abstract public class Mission extends GameComponent
         tmp += ">";
         return tmp;
     }
-    
 }

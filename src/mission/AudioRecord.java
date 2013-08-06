@@ -54,38 +54,16 @@ public class AudioRecord extends Mission
         return file;
     }
 
-//    public String createSpecificMissionHeader()
-//    {
-//        String returnString = utilitys.task(task.get());
-//        if(!file.get().isEmpty())
-//        {
-//            returnString += utilitys.file(file.get());
-//        }
-//        return returnString;
-//    }
-
     @Override
     public String assemble()
     {
-//        return createMissionHeader() + buildMissionTail();
         return buildMissionHead() + buildMissionTail();
     }
-
-//    @Override
-//    public Boolean isComplete()
-//    {
-//        Boolean isComplete = true;
-//        if (getId().isEmpty() || task.get().isEmpty())
-//        {
-//            isComplete = false;
-//        }
-//        return isComplete;
-//    }
 
     @Override
     protected final void addNecessaryAndOptionalFields()
     {
-        addNecessaryHeaderFields(getFieldByString("task"));
-        addOptionalHeaderFields(getFieldByString("file"));
+        addNecessaryHeaderFields(getFieldByString("file"));
+        addOptionalHeaderFields(getFieldByString("task"));
     }
 }

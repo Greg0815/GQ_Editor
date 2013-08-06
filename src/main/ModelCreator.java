@@ -14,11 +14,11 @@ import containers.Container;
 import containers.Game;
 import containers.LinearContainer;
 import containers.VariableContainer;
-import mission.rules.actions.Action;
-import mission.rules.actions.ActionStartMission;
+import java.util.ArrayList;
 import mission.rules.Rule;
 import mission.rules.Trigger;
-import java.util.ArrayList;
+import mission.rules.actions.Action;
+import mission.rules.actions.ActionStartMission;
 
 /**
  *
@@ -121,6 +121,7 @@ public class ModelCreator
     {
         for (BlockConnector blockConnector : description.getBlockConnectors())
         {
+            
             Container from = getContainerByIdString(blockConnector.getFromBlockId());
             Container to = getContainerByIdString(blockConnector.getToBlockId());
             Trigger trigger = blockConnector.getTrigger();
@@ -128,7 +129,6 @@ public class ModelCreator
             ActionStartMission startMissionAction = new ActionStartMission(to.getFirstGameElementsGameId());
             rule.addAction(startMissionAction);
             trigger.addRule(rule);
-            System.out.println(from.getId() + "\t" + from.getGameElements().size());
             from.getLastGameElement().addTrigger(trigger);
         }
     }
@@ -137,7 +137,7 @@ public class ModelCreator
     {
         for (Block block : description.getBlocks())
         {
-            applyToArrayList(block, "onBegin", block.getOnBeginRules());
+            applyToArrayList(block, "onStart", block.getOnStartRules());
             applyToArrayList(block, "onEnd", block.getOnEndRules());
             applyToArrayList(block, "onSuccess", block.getOnSuccessRules());
             applyToArrayList(block, "onFail", block.getOnFailRules());
@@ -150,15 +150,15 @@ public class ModelCreator
     {
         for (Container container : game.getContainers())
         {
-            if (container.getGameElements().size() > 1)
+            if (container.getGameComponents().size() > 1)
             {
-                for (int i = 0; i < container.getGameElements().size()-1; i++)
+                for (int i = 0; i < container.getGameComponents().size()-1; i++)
                 {
                     Trigger trigger = container.getInternalConnector();
                     Rule rule = new Rule();
                     trigger.addRule(rule);
-                    rule.addAction(new ActionStartMission(container.getGameElements().get(i + 1).getId()));
-                    container.getGameElements().get(i).addTrigger(trigger);
+                    rule.addAction(new ActionStartMission(container.getGameComponents().get(i + 1).getId()));
+                    container.getGameComponents().get(i).addTrigger(trigger);
                 }
             }
         }

@@ -26,6 +26,12 @@ public class VariableBlock extends Block
         super(id, maxMissionCount, internalConnector);
         missionTypes = new ArrayList<>();
     }
+    
+    public VariableBlock(String id, String internalConnector)
+    {
+        super(id, internalConnector);
+        missionTypes = new ArrayList<>();
+    }
 
     public VariableBlock(String id)
     {

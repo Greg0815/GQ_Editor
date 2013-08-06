@@ -6,8 +6,16 @@ package main;
 
 import blocks.Description;
 import containers.Game;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.zip.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -28,9 +36,9 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import mission.components.Hotspot;
 
 /**
  *
@@ -54,14 +62,17 @@ public class EditorOberflaeche extends Application
     private MenuBar gameSelectionMenuBar;
     private MenuBar gameEditingMenuBar;
     private String cssPath;
-    
+
     private void testFunktion()
     {
-        String[] ids = {"hasenzahn", "rhabarberkuchen", "traumtanz", "iiaapopo"};
+        String[] ids =
+        {
+            "hasenzahn", "rhabarberkuchen", "traumtanz", "iiaapopo"
+        };
         MapViewer browsi = new MapViewer(ids);
         mapViewScreen = new Scene(browsi, 1024, 768);
         stage.setScene(mapViewScreen);
-        
+
 //        ArrayList<Hotspot> hotspots = new ArrayList<>();
 //        Hotspot hs1 = new Hotspot();
 //        hs1.setId("Pausenbrot");
@@ -79,19 +90,19 @@ public class EditorOberflaeche extends Application
 //        mapViewScreen = new Scene(browsiHotspots);
 //        stage.setScene(mapViewScreen);
     }
-    
+
     @Override
     public void start(final Stage primaryStage)
     {
         initialization(new Pair<String, Description>("minimal Example", (new ExampleDescriptions()).minimalExample()), new Pair<String, Description>("Opa Enkel", (new ExampleDescriptions()).opaEnkel()), new Pair<String, Description>("Container Test", (new ExampleDescriptions()).newContainerModels()));
         setCssPath("styles/customStyle1.css");
-        
+
         stage = primaryStage;
         stage.setScene(makeGameSelectionOberflaeche());
         stage.show();
-        testFunktion(); // später löschen
+//        testFunktion(); // später löschen
     }
-    
+
     public void initialization(Pair<String, Description>... descriptions)
     {
         this.descriptions = new ArrayList<>();
@@ -102,15 +113,15 @@ public class EditorOberflaeche extends Application
         obsi = FXCollections.observableArrayList();
         assembleOutput = new TextArea();
         modelCreators = new ArrayList<>();
-        
+
         this.descriptions.addAll(Arrays.asList(descriptions));
-        
+
         for (Pair pair : this.descriptions)
         {
             choiceBoxSelectionDinger.add((String) pair.getKey());
         }
         descriptionSelector.setItems(FXCollections.observableArrayList(choiceBoxSelectionDinger));
-        
+
         obsi.addListener(new ListChangeListener<String>()
         {
             @Override
@@ -121,26 +132,31 @@ public class EditorOberflaeche extends Application
         });
         createGameSelectionMenuBar();
     }
-    
+
     private void setCssPath(String cssPath)
     {
         this.cssPath = cssPath;
     }
-    
+
     private void createGameEditingMenuBar(final UIBuilder ui)
     {
         gameEditingMenuBar = new MenuBar();
         Menu menu1 = new Menu("File");
         Menu menu2 = new Menu("Options");
-        gameEditingMenuBar.getMenus().addAll(menu1, menu2);
-        
+        Menu menu3 = new Menu("Map");
+        gameEditingMenuBar.getMenus().addAll(menu1, menu2, menu3);
+
         MenuItem menuItem11 = new MenuItem("Save & Exit");
         MenuItem menuItem12 = new MenuItem("Discard & Exit");
         menu1.getItems().addAll(menuItem11, menuItem12);
-        
+
         CheckMenuItem displayAllFieldsMenuItem = new CheckMenuItem("Display all fields");
         menu2.getItems().add(displayAllFieldsMenuItem);
-        
+
+        MenuItem menuItem31 = new MenuItem("Show Map");
+        MenuItem menuItem32 = new MenuItem("Edit Hotspots");
+        menu3.getItems().addAll(menuItem31, menuItem32);
+
         menuItem11.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -155,7 +171,7 @@ public class EditorOberflaeche extends Application
                 }
             }
         });
-        
+
         menuItem12.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -165,7 +181,7 @@ public class EditorOberflaeche extends Application
                 stage.setScene(gameSelectionScreen);
             }
         });
-        
+
         displayAllFieldsMenuItem.setSelected(false);
         displayAllFieldsMenuItem.selectedProperty().addListener(new ChangeListener<Boolean>()
         {
@@ -174,29 +190,55 @@ public class EditorOberflaeche extends Application
             {
                 if (t1.booleanValue() == true)
                 {
-                    // alles sichtbar machen
                     ui.turnNodesVisible();
                 }
                 else
                 {
-                    // alles unsichtbar machen
                     ui.turnNodesInvisible();
                 }
             }
         });
-        
+        menuItem31.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent t)
+            {
+                // show the map
+//                if(currentEditedGame.get)
+//                MapViewer browsi = new MapViewer(ids);
+//        mapViewScreen = new Scene(browsi, 1024, 768);
+//        stage.setScene(mapViewScreen);
+            }
+        });
+        menuItem32.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent t)
+            {
+                // make hotspot editing sheiß
+            }
+        });
     }
-    
+
     private void createGameSelectionMenuBar()
     {
         gameSelectionMenuBar = new MenuBar();
         Menu menu1 = new Menu("File");
         Menu menu2 = new Menu("GeoQuest Homepage");
         gameSelectionMenuBar.getMenus().addAll(menu1, menu2);
-        
-        MenuItem menuItem11 = new MenuItem("Exit");
-        menu1.getItems().add(menuItem11);
+
+        MenuItem menuItem11 = new MenuItem("Export");
+        MenuItem menuItem12 = new MenuItem("Exit");
+        menu1.getItems().addAll(menuItem11, menuItem12);
         menuItem11.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent t)
+            {
+                exportGame();
+            }
+        });
+        menuItem12.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent t)
@@ -204,7 +246,7 @@ public class EditorOberflaeche extends Application
                 Platform.exit();
             }
         });
-        
+
         menu2.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -214,7 +256,7 @@ public class EditorOberflaeche extends Application
             }
         });
     }
-    
+
     public ModelCreator findModelCreatorForGame(Game game)
     {
         for (ModelCreator creator : modelCreators)
@@ -226,7 +268,7 @@ public class EditorOberflaeche extends Application
         }
         return null;
     }
-    
+
     public Scene makeGameSelectionOberflaeche()
     {
         VBox rootNode = new VBox();
@@ -235,7 +277,7 @@ public class EditorOberflaeche extends Application
         {
             gameSelectionScreen.getStylesheets().add(cssPath);
         }
-        
+
         final Button createGameButton = new Button("Make Selected Game");
         createGameButton.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -297,7 +339,7 @@ public class EditorOberflaeche extends Application
         // TMP END
         return gameSelectionScreen;
     }
-    
+
     private Game findGameByGameName(String gameName)
     {
         for (Game game : games)
@@ -309,7 +351,7 @@ public class EditorOberflaeche extends Application
         }
         return null;
     }
-    
+
     private Scene makeGameEditingOberflaeche()
     {
         VBox rootNode = new VBox();
@@ -318,7 +360,7 @@ public class EditorOberflaeche extends Application
         {
             gameEditingScreen.getStylesheets().add(cssPath);
         }
-        
+
         Description selectedDescription = null;
         for (Pair pair : descriptions)
         {
@@ -327,16 +369,16 @@ public class EditorOberflaeche extends Application
                 selectedDescription = (Description) pair.getValue();
             }
         }
-        
+
         ModelCreator newModelCreator = new ModelCreator(selectedDescription);
         modelCreators.add(newModelCreator);
         UIBuilder newUI = new UIBuilder(currentEditedGame = newModelCreator.getGame());
         createGameEditingMenuBar(newUI);
-        
+
         rootNode.getChildren().addAll(gameEditingMenuBar, newUI.parseGame());
         return gameEditingScreen;
     }
-    
+
     private Scene makeGameEditingOberflaeche(Game game)
     {
         VBox rootNode = new VBox();
@@ -345,14 +387,94 @@ public class EditorOberflaeche extends Application
         {
             gameEditingScreen.getStylesheets().add(cssPath);
         }
-        
+
         UIBuilder newUI = new UIBuilder(game);
         createGameEditingMenuBar(newUI);
-        
+
         rootNode.getChildren().addAll(gameEditingMenuBar, newUI.parseGame());
         return gameEditingScreen;
     }
-    
+
+    private void exportGame()
+    {
+        Game game = findGameByGameName(gamesListViewByString.getSelectionModel().getSelectedItem());
+        if (game != null)
+        {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            File targetDirectory = directoryChooser.showDialog(stage);
+            if (targetDirectory.isDirectory())
+            {
+                FileOutputStream fileOutputStream = null;
+                ZipOutputStream zip = null;
+
+                try
+                {
+                    String exportLocation = targetDirectory.getAbsolutePath();
+                    game.getDrawablesSoundsAndVideosFromGameComponents();
+                    fileOutputStream = new FileOutputStream(exportLocation + game.getId() + ".zip");
+                    zip = new ZipOutputStream(new BufferedOutputStream(fileOutputStream));
+
+                    for (File drawable : game.getDrawables())
+                    {
+                        ZipEntry drawableFileEntry = new ZipEntry("drawable\\" + drawable.getName());
+                        zip.putNextEntry(drawableFileEntry);
+                        FileInputStream fis = new FileInputStream(drawable);
+                        int b;
+                        while ((b = fis.read()) != -1)
+                        {
+                            zip.write(b);
+                        }
+                        fis.close();
+                        zip.closeEntry();
+                    }
+                    for (File video : game.getVideos())
+                    {
+                        ZipEntry videoFileEntry = new ZipEntry("videos\\" + video.getName());
+                        zip.putNextEntry(videoFileEntry);
+                        FileInputStream fis = new FileInputStream(video);
+                        int b;
+                        while ((b = fis.read()) != -1)
+                        {
+                            zip.write(b);
+                        }
+                        fis.close();
+                        zip.closeEntry();
+                    }
+                    for (File sound : game.getSounds())
+                    {
+                        ZipEntry soundFileEntry = new ZipEntry("sound\\" + sound.getName());
+                        zip.putNextEntry(soundFileEntry);
+                        FileInputStream fis = new FileInputStream(sound);
+                        int b;
+                        while ((b = fis.read()) != -1)
+                        {
+                            zip.write(b);
+                        }
+                        fis.close();
+                        zip.closeEntry();
+                    }
+
+                    BufferedReader br = new BufferedReader(new StringReader(game.assemble()));
+                    ZipEntry gameFile = new ZipEntry("game.xml");
+                    zip.putNextEntry(gameFile);
+                    int b;
+                    while ((b = br.read()) != -1)
+                    {
+                        zip.write(b);
+                    }
+                    zip.closeEntry();
+                    br.close();
+                    zip.close();
+                    fileOutputStream.close();
+                }
+                catch (IOException ex)
+                {
+                    System.out.println("exportGame() Error: " + ex);
+                }
+            }
+        }
+    }
+
     public static void main(String[] args)
     {
         launch(args);

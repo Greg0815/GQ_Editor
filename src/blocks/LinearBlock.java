@@ -27,6 +27,12 @@ public class LinearBlock extends Block
         super(id, maxMissionCount, internalConnector);
         missionTypesSequence = new ArrayList<>();
     }
+    
+    public LinearBlock(String id, String internalConnector)
+    {
+        super(id, internalConnector);
+        missionTypesSequence = new ArrayList<>();
+    }
 
     public LinearBlock(String id)
     {

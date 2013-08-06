@@ -10,8 +10,6 @@ import containers.LinearContainer;
 import containers.VariableContainer;
 import customInputNodes.FileBrowser;
 import customInputNodes.NumericTextField;
-import mission.components.MissionComponent;
-import mission.Mission;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,6 +34,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.NumberStringConverter;
+import mission.Mission;
+import mission.components.MissionComponent;
 
 /**
  *
@@ -190,11 +190,11 @@ public class UIBuilder
         Accordion innerContainerLayoutContent = new Accordion();
         innerContainerLayout.getChildren().add(innerContainerLayoutContent);
 
-        if (linCont.getGameElements().size() > 0)
+        if (linCont.getGameComponents().size() > 0)
         {
-            for (int i = 0; i < linCont.getGameElements().size(); i++)
+            for (int i = 0; i < linCont.getGameComponents().size(); i++)
             {
-                innerContainerLayoutContent.getPanes().add(parseGameElement(linCont.getGameElements().get(i)));
+                innerContainerLayoutContent.getPanes().add(parseGameElement(linCont.getGameComponents().get(i)));
             }
         }
         else
@@ -206,7 +206,7 @@ public class UIBuilder
 //            missionTitledPane.setExpanded(false);
 
                 GameComponent newGameElement = linCont.makeNewGameElementByClass(allowedClass);
-                newGameElement.setId(linCont.getId() + "-" + ((Mission) newGameElement).getType() + "-" + linCont.getGameElements().indexOf(newGameElement));
+                newGameElement.setId(linCont.getId() + "-" + ((Mission) newGameElement).getType() + "-" + linCont.getGameComponents().indexOf(newGameElement));
 
 //            UIBuilder newGameElementUI = new UIBuilder(newGameElement);
 //            missionTitledPane.setContent();
@@ -228,17 +228,17 @@ public class UIBuilder
 
         final Accordion innerContainerLayoutContent = new Accordion();
 
-        if (varCont.getGameElements().size() > 0)    // es sind objekte vorhanden, also kein jungfräuliches game mehr
+        if (varCont.getGameComponents().size() > 0)    // es sind objekte vorhanden, also kein jungfräuliches game mehr
         {
-            for (int i = 0; i < varCont.getGameElements().size(); i++)
+            for (int i = 0; i < varCont.getGameComponents().size(); i++)
             {
-                innerContainerLayoutContent.getPanes().add(parseGameElement(varCont.getGameElements().get(i)));
+                innerContainerLayoutContent.getPanes().add(parseGameElement(varCont.getGameComponents().get(i)));
             }
         }
         else if (varCont.getMaxMissionCount() == 1 && varCont.getAllowedClasses().size() == 1)
         {
             GameComponent newGameElementInstance = varCont.makeNewGameElementByClass(varCont.getAllowedClasses().get(0));
-            newGameElementInstance.setId(varCont.getId() + "-" + ((Mission) newGameElementInstance).getType() + "-" + varCont.getGameElements().indexOf(newGameElementInstance));
+            newGameElementInstance.setId(varCont.getId() + "-" + ((Mission) newGameElementInstance).getType() + "-" + varCont.getGameComponents().indexOf(newGameElementInstance));
             innerContainerLayoutContent.getPanes().add(parseGameElement(newGameElementInstance));
         }
         else
@@ -255,7 +255,7 @@ public class UIBuilder
                         if (varCont.hasSpaceLeft())
                         {
                             final GameComponent newGameElementInstance = varCont.makeNewGameElementByClass(allowedClass);
-                            newGameElementInstance.setId(varCont.getId() + "-" + ((Mission) newGameElementInstance).getType() + "-" + varCont.getGameElements().indexOf(newGameElementInstance));
+                            newGameElementInstance.setId(varCont.getId() + "-" + ((Mission) newGameElementInstance).getType() + "-" + varCont.getGameComponents().indexOf(newGameElementInstance));
                             final TitledPane tp = parseGameElement(newGameElementInstance);
                             tp.setOnMouseClicked(new EventHandler<MouseEvent>()
                             {
@@ -287,7 +287,7 @@ public class UIBuilder
     public Node parseGame()
     {
         VBox gameLayout = new VBox();
-System.out.println(game.getNecessaryHeaderFields().size());
+        System.out.println(game.getNecessaryHeaderFields().size());
         for (Field field : game.getNecessaryHeaderFields())
         {
             HBox hBox = makeHBoxDependingOnFieldAndMissionObject(field, game);
@@ -301,7 +301,7 @@ System.out.println(game.getNecessaryHeaderFields().size());
         return gameLayout;
     }
 
-    private HBox makeInvisibleHBoxForOptionalFieldsDependingOnFieldAndClass(Field field, Object missionObject)
+    private HBox makeInvisibleHBoxForOptionalFieldsDependingOnFieldAndClass(Field field, final Object missionObject)
     {
         final HBox returnHBox = new HBox();
         returnHBox.managedProperty().bind(returnHBox.visibleProperty());
@@ -312,8 +312,21 @@ System.out.println(game.getNecessaryHeaderFields().size());
             if (field.getName().equalsIgnoreCase("image"))
             {
                 field.setAccessible(true);
-                FileBrowser fb = new FileBrowser("Images", "*.jpg", "*.png", "*.bmp");
+                final FileBrowser fb = new FileBrowser("Images", "*.jpg", "*.png", "*.bmp");
                 fb.filePathProperty().bindBidirectional(getStringPropertyByFieldAndClass(field, missionObject));
+                fb.filePathProperty().addListener(new ChangeListener<String>()
+                {
+                    @Override
+                    public void changed(ObservableValue<? extends String> ov, String t, String t1)
+                    {
+                        Mission m = ((Mission)missionObject);
+                        m.removeDrawable(t);
+                        m.addDrawable(fb.getFile());
+                        System.out.println("from: " + t + "  to: " + t1);
+                        System.out.println("File added:" + fb.getFile().getName());
+                        System.out.println("Drawables size:" + ((Mission)missionObject).getDrawables().size());
+                    }
+                });
                 returnHBox.getChildren().add(fb.getNode());
             }
             else if (field.getType().toString().contains("StringProperty") && !field.getName().equalsIgnoreCase("image"))
@@ -354,7 +367,7 @@ System.out.println(game.getNecessaryHeaderFields().size());
                 field.setAccessible(true);
                 if (((IntegerProperty) field.get(missionObject)).asString().isNotNull().get())
                 {
-                    bindToNumiercPropertyTextField.setText(((Integer) field.get(missionObject)).toString());          // Testen !!
+                    bindToNumiercPropertyTextField.setText((field.get(missionObject)).toString());          // Testen !!
                 }
                 bindToNumiercPropertyTextField.textProperty().bindBidirectional(getIntegerPropertyByFieldAndClass(field, missionObject), new NumberStringConverter());
                 returnHBox.getChildren().addAll(new Label(field.getName()), bindToNumiercPropertyTextField);
@@ -380,12 +393,32 @@ System.out.println(game.getNecessaryHeaderFields().size());
     }
 
     // Enthält zwei mögliche Fehlerquellen, hat keiner dazu geschrieben welche
-    protected HBox makeHBoxDependingOnFieldAndMissionObject(Field field, Object missionObject)
+    protected HBox makeHBoxDependingOnFieldAndMissionObject(Field field, final Object missionObject)
     {
         HBox returnHBox = new HBox();
         try
         {
-            if (field.getType().toString().contains("StringProperty"))
+            if (field.getName().equalsIgnoreCase("image"))
+            {
+                field.setAccessible(true);
+                final FileBrowser fb = new FileBrowser("Images", "*.jpg", "*.png", "*.bmp");
+                fb.filePathProperty().bindBidirectional(getStringPropertyByFieldAndClass(field, missionObject));
+                fb.filePathProperty().addListener(new ChangeListener<String>()
+                {
+                    @Override
+                    public void changed(ObservableValue<? extends String> ov, String t, String t1)
+                    {
+                        Mission m = ((Mission)missionObject);
+                        m.removeDrawable(t);
+                        m.addDrawable(fb.getFile());
+                        System.out.println("from: " + t + "  to: " + t1);
+                        System.out.println("File added:" + fb.getFile().getName());
+                        System.out.println("Drawables size:" + ((Mission)missionObject).getDrawables().size());
+                    }
+                });
+                returnHBox.getChildren().add(fb.getNode());
+            }
+            else if (field.getType().toString().contains("StringProperty") && !field.getName().equalsIgnoreCase("image"))
             {
                 final TextField bindToStringPropertyTextField = new TextField();
 
